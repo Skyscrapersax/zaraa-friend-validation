@@ -1,0 +1,48 @@
+# Trimmed from zaraa's friend-package-validation.yml: package bytes are
+# committed in-repo (built + sanitized on the maintainer's Mac), so there is
+# no build job — this runs ONLY the Windows clean-install validation, the one
+# leg that cannot run locally. Node 25, no pnpm/corepack preinstalled: the
+# installer under test must bootstrap pnpm itself.
+name: Windows Friend Package Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: windows-validation
+  cancel-in-progress: true
+
+jobs:
+  validate-windows:
+    name: Validate Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25
+
+      - name: Confirm bare environment
+        shell: bash
+        run: |
+          echo "node:     $(node -v)"
+          echo "pnpm:     $(command -v pnpm || echo 'not present (expected)')"
+          echo "corepack: $(command -v corepack || echo 'not present on Node 25 (expected)')"
+
+      - name: Clean-install validation
+        run: node scripts/friend-package-validate-windows-temp.mjs
+
+      - name: Upload report
+        # Upload on failure too — a failing report is the evidence we want to read.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-Windows
+          path: dist/friend-package/windows-clean-install-validation-*.json
+          retention-days: 7

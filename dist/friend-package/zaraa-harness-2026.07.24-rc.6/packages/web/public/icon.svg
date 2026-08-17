@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Zaraa">
+	<defs>
+		<linearGradient id="ankhGold" x1="128" y1="24" x2="128" y2="232" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#ffd166"/>
+			<stop offset="1" stop-color="#ff9e2c"/>
+		</linearGradient>
+	</defs>
+	<rect width="256" height="256" rx="56" fill="#100c08"/>
+	<g fill="url(#ankhGold)">
+		<path fill-rule="evenodd" d="M88 70a40 46 0 1 0 80 0a40 46 0 1 0-80 0ZM109 72a19 23 0 1 0 38 0a19 23 0 1 0-38 0Z"/>
+		<rect x="56" y="146" width="144" height="24" rx="12"/>
+		<rect x="115" y="119" width="26" height="106" rx="13"/>
+	</g>
+</svg>

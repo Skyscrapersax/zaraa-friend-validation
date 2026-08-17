@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T22:40:48.885Z",
+  "status": "watch",
+  "safeToShare": false,
+  "blockers": [
+    "macOS validation is fail.",
+    "Windows validation is untested.",
+    "Linux validation is blocked."
+  ],
+  "warnings": [],
+  "summary": {
+    "version": "2026.07.24-rc.6",
+    "channel": "friends",
+    "packageDirectory": "zaraa-harness-2026.07.24-rc.6",
+    "archiveCount": 2,
+    "totalArchiveBytes": 11039186,
+    "artifactCount": 65,
+    "validationReport": "dist/friend-package/validation-report.json"
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "label": "Manifest/package version",
+      "detail": "2026.07.24-rc.6 matches current manifest."
+    },
+    {
+      "status": "PASS",
+      "label": "Source package version",
+      "detail": "2026.07.24-rc.6 matches latest.json."
+    },
+    {
+      "status": "PASS",
+      "label": "Release source identity",
+      "detail": "6916cd8a948c29a58118e20be708f62dcdc5d7dd matches staged manifest and clean source HEAD and current manifest."
+    },
+    {
+      "status": "PASS",
+      "label": "Staged package",
+      "detail": "dist/friend-package/zaraa-harness-2026.07.24-rc.6"
+    },
+    {
+      "status": "PASS",
+      "label": "Staged package path hygiene",
+      "detail": "No forbidden path names (local state, logs, secrets-named paths, tests, experiment output, packages/<pkg>/src)."
+    },
+    {
+      "status": "PASS",
+      "label": "Staged package content secret scan",
+      "detail": "Scanned 756 ship-surface file(s); no secret-shaped content found."
+    },
+    {
+      "status": "PASS",
+      "label": "Staged package owner-path scan",
+      "detail": "Scanned 756 ship-surface file(s); no owner home, affiliate repo, or owner Amazon tag residue."
+    },
+    {
+      "status": "PASS",
+      "label": "Installer: macOS/Linux",
+      "detail": "installers/install-macos-linux.sh"
+    },
+    {
+      "status": "PASS",
+      "label": "Installer: Windows",
+      "detail": "installers/install-windows.ps1"
+    },
+    {
+      "status": "PASS",
+      "label": "Starter: macOS/Linux",
+      "detail": "installers/start-macos-linux.sh"
+    },
+    {
+      "status": "PASS",
+      "label": "Starter: Windows",
+      "detail": "installers/start-windows.ps1"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: install guide",
+      "detail": "docs/friend-harness-install-guide.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: handoff README",
+      "detail": "docs/friend-package-handoff.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: release notes template",
+      "detail": "docs/friend-release-notes-template.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: known issues",
+      "detail": "docs/friend-known-issues.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: platform validation",
+      "detail": "docs/friend-platform-validation.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: platform validation handoff",
+      "detail": "docs/friend-platform-validation-handoff.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: friend install quickstart",
+      "detail": "FRIEND_INSTALL.md"
+    },
+    {
+      "status": "PASS",
+      "label": "Docs: start page",
+      "detail": "START_HERE.html"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: core launcher",
+      "detail": "packages/core/dist/launcher.js"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: web dashboard",
+      "detail": "packages/web/dist/index.html"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: CLI zaraa",
+      "detail": "packages/cli/dist/zaraa.js"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: CLI zaraacoder",
+      "detail": "packages/cli/dist/zaraacoder.js"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: DeerFlow compatibility wrapper",
+      "detail": "packages/deerflow-compat/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: prediction native fallback wrapper",
+      "detail": "packages/predict/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: trading kernel fallback wrapper",
+      "detail": "packages/trading-kernel/index.cjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: daemon",
+      "detail": "scripts/zaraa-daemon.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: daemon helpers",
+      "detail": "scripts/zaraa-daemon-lib.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: restart intent",
+      "detail": "scripts/lib/restart-intent.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: installer updater",
+      "detail": "scripts/friend-kit-update.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: config money-rail pin",
+      "detail": "scripts/friend-config-safety.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: install preflight",
+      "detail": "scripts/friend-build-preflight.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: preflight policy",
+      "detail": "scripts/friend-build-preflight-policy.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: package verifier",
+      "detail": "scripts/friend-package-verify.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: release policy",
+      "detail": "scripts/friend-release-constants.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Runtime: secret scan library",
+      "detail": "scripts/zaraa-secret-scan.mjs"
+    },
+    {
+      "status": "PASS",
+      "label": "Archive size",
+      "detail": "zaraa-harness-2026.07.24-rc.6.tar.gz is 5329556 bytes."
+    },
+    {
+      "status": "PASS",
+      "label": "Archive SHA256",
+      "detail": "zaraa-harness-2026.07.24-rc.6.tar.gz hash matches latest.json."
+    },
+    {
+      "status": "PASS",
+      "label": "Archive/staged package contents",
+      "detail": "zaraa-harness-2026.07.24-rc.6.tar.gz matches 1017 staged package entries."
+    },
+    {
+      "status": "PASS",
+      "label": "Archive size",
+      "detail": "zaraa-harness-2026.07.24-rc.6.zip is 5709630 bytes."
+    },
+    {
+      "status": "PASS",
+      "label": "Archive SHA256",
+      "detail": "zaraa-harness-2026.07.24-rc.6.zip hash matches latest.json."
+    },
+    {
+      "status": "PASS",
+      "label": "Archive/staged package contents",
+      "detail": "zaraa-harness-2026.07.24-rc.6.zip matches 1017 staged package entries."
+    },
+    {
+      "status": "PASS",
+      "label": "Release artifact count",
+      "detail": "65 artifact(s) recorded in release manifest."
+    },
+    {
+      "status": "PASS",
+      "label": "Package archive bytes",
+      "detail": "11039186 total archive bytes."
+    }
+  ],
+  "packageContents": {
+    "installers": [
+      "installers/install-macos-linux.sh",
+      "installers/install-windows.ps1",
+      "installers/start-macos-linux.sh",
+      "installers/start-windows.ps1"
+    ],
+    "docs": [
+      "docs/friend-harness-install-guide.md",
+      "docs/friend-package-handoff.md",
+      "docs/friend-release-notes-template.md",
+      "docs/friend-known-issues.md",
+      "docs/friend-platform-validation.md",
+      "docs/friend-platform-validation-handoff.md",
+      "FRIEND_INSTALL.md",
+      "START_HERE.html"
+    ]
+  },
+  "platformMatrix": [
+    {
+      "platform": "macOS",
+      "status": "fail",
+      "detail": "macOS clean-folder install failed at 2026-08-16T22:40:48.020Z.",
+      "report": "dist/friend-package/macos-clean-install-validation-2026.07.24-rc.6.json"
+    },
+    {
+      "platform": "Windows",
+      "status": "untested",
+      "detail": "PowerShell installer validation needs a real Windows machine or VM."
+    },
+    {
+      "platform": "Linux",
+      "status": "blocked",
+      "detail": "linux-clean-install-validation-2026.07.24-rc.6.json was generated for a different package build.",
+      "report": "dist/friend-package/linux-clean-install-validation-2026.07.24-rc.6.json"
+    }
+  ],
+  "release": {
+    "updateChannels": [
+      {
+        "label": "Master",
+        "source": "Mama Zaraa optimization lane",
+        "guardrail": "Can move quickly, but must not auto-ship to friends."
+      },
+      {
+        "label": "Beta",
+        "source": "Promoted master snapshot",
+        "guardrail": "Requires build, preflight, package, package verification, and browser smoke evidence."
+      },
+      {
+        "label": "Friends",
+        "source": "Validated beta package",
+        "guardrail": "Requires installer proof, rollback notes, and support guidance before sharing."
+      },
+      {
+        "label": "Stable",
+        "source": "Repeatedly validated friends releases",
+        "guardrail": "Comes later, after normal use proves recovery and update behavior."
+      }
+    ],
+    "promotionChecklist": [
+      "Run pnpm --filter @zaraa/web build.",
+      "Run pnpm ship:ready.",
+      "Run pnpm ship:package.",
+      "Run pnpm ship:verify-package.",
+      "Browser-smoke Ship Readiness, Cockpit, Dashboard, and Brain Map.",
+      "Validate macOS install in a clean temporary folder.",
+      "Validate Windows install path on a real machine or VM.",
+      "Validate Linux install path on a real machine or VM.",
+      "Attach release notes, known issues, rollback notes, and support template."
+    ],
+    "runbookLinks": [
+      {
+        "label": "Install guide",
+        "path": "docs/friend-harness-install-guide.md"
+      },
+      {
+        "label": "Handoff README",
+        "path": "docs/friend-package-handoff.md"
+      },
+      {
+        "label": "Release notes template",
+        "path": "docs/friend-release-notes-template.md"
+      },
+      {
+        "label": "Known issues",
+        "path": "docs/friend-known-issues.md"
+      },
+      {
+        "label": "Platform validation",
+        "path": "docs/friend-platform-validation.md"
+      },
+      {
+        "label": "Platform validation handoff",
+        "path": "docs/friend-platform-validation-handoff.md"
+      }
+    ],
+    "finalHumanChecklist": [
+      "Package metadata matches the archives being shared.",
+      "Package docs are inside the staged folder and archives.",
+      "Hashes have been checked after archive creation.",
+      "No local keys, configs, logs, memories, or private files are included.",
+      "At least one clean-folder install has been validated before friend sharing.",
+      "Rollback and support instructions are included with the package."
+    ],
+    "knownIssues": [
+      "macOS installer validation is fail.",
+      "Windows installer validation is untested.",
+      "Linux installer validation is blocked."
+    ],
+    "releaseNotesTemplate": "docs/friend-release-notes-template.md"
+  },
+  "finalHumanChecklist": [
+    "Package metadata matches the archives being shared.",
+    "Package docs are inside the staged folder and archives.",
+    "Hashes have been checked after archive creation.",
+    "No local keys, configs, logs, memories, or private files are included.",
+    "At least one clean-folder install has been validated before friend sharing.",
+    "Rollback and support instructions are included with the package."
+  ]
+}

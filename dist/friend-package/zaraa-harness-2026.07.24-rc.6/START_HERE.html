@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zaraa Friend Harness</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f8efe2;
+      --muted: #c8bba8;
+      --panel: rgba(29, 23, 19, 0.78);
+      --line: rgba(248, 239, 226, 0.18);
+      --gold: #f0c979;
+      --ember: #d96f45;
+      --green: #8fd6a1;
+      --bg: #130f0d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(217, 111, 69, 0.32), transparent 30rem),
+        radial-gradient(circle at 80% 0%, rgba(240, 201, 121, 0.22), transparent 26rem),
+        linear-gradient(135deg, #130f0d 0%, #241a15 54%, #101413 100%);
+      padding: clamp(1.5rem, 4vw, 4rem);
+    }
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+    }
+    .hero, .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(18px);
+    }
+    .hero {
+      padding: clamp(1.75rem, 5vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero:after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -50% 20%;
+      height: 18rem;
+      background: radial-gradient(circle, rgba(143, 214, 161, 0.2), transparent 65%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      color: var(--gold);
+      font: 700 0.78rem/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0.55rem 0 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.85;
+      letter-spacing: -0.08em;
+    }
+    .sub {
+      max-width: 58rem;
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font: 1.15rem/1.75 ui-sans-serif, system-ui, sans-serif;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .card {
+      padding: 1.25rem;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .card h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1rem;
+      color: var(--gold);
+    }
+    code {
+      display: block;
+      overflow-x: auto;
+      padding: 0.85rem;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--green);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .pill {
+      display: inline-flex;
+      gap: 0.45rem;
+      align-items: center;
+      margin-top: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.55rem 0.8rem;
+      color: var(--muted);
+      font: 700 0.78rem/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { letter-spacing: -0.055em; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Zaraa friend harness</div>
+      <h1>Mama Zaraa, portable.</h1>
+      <p class="sub">This package installs a local Zaraa dashboard and gateway, keeps private config outside the app folder, and gives you a simple path to update when a newer master release is shared.</p>
+      <div class="pill">Version 2026.07.24-rc.6 / friends</div>
+    </section>
+    <section class="grid">
+      <article class="card">
+        <h2>1. Install or update</h2>
+        <code>macOS/Linux:
+export ZARAA_HOME_DIR=/absolute/isolated/home
+./installers/install-macos-linux.sh
+
+Windows:
+$env:ZARAA_HOME_DIR = "C:\absolute\isolated\home"
+.\installers\install-windows.ps1</code>
+      </article>
+	  <article class="card">
+		<h2>2. Connect a model</h2>
+		<code>cd &lt;installed-root&gt;
+pnpm setup
+pnpm doctor</code>
+		<p>Choose Anthropic, OpenRouter, or local Ollama. Existing gateway and safety settings stay intact.</p>
+	  </article>
+	  <article class="card">
+		<h2>3. Start Zaraa</h2>
+		<code>macOS/Linux:
+./installers/start-macos-linux.sh
+
+Windows:
+.\installers\start-windows.ps1</code>
+	  </article>
+	  <article class="card">
+		<h2>4. Open dashboard</h2>
+        <code>http://localhost:3927/</code>
+        <p>The Brain Map shell is served fresh each launch, while hashed assets stay safely cached.</p>
+	  </article>
+	  <article class="card">
+		<h2>5. Read the runbook</h2>
+        <code>docs/friend-harness-install-guide.md
+docs/friend-package-handoff.md</code>
+        <p>Do not share local keys, configs, logs, memories, or private workspace data.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

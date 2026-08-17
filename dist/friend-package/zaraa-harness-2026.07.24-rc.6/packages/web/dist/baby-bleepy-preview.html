@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Baby Bleepy Bot — preview</title>
+	<style>
+		:root {
+			--bleepy-mint: #53f3c7;
+			--bleepy-lime: #d5ff67;
+			--bleepy-ink: #13201d;
+			--bleepy-cream: #fff7e3;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			padding: 28px 18px 40px;
+			font-family: "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+			color: var(--bleepy-ink);
+			background:
+				radial-gradient(circle at 18% 18%, rgba(83, 243, 199, 0.34), transparent 26rem),
+				radial-gradient(circle at 84% 14%, rgba(213, 255, 103, 0.22), transparent 20rem),
+				linear-gradient(135deg, #fff7e3 0%, #e7fbf1 46%, #dde8ff 100%);
+		}
+		.shell {
+			width: min(920px, 100%);
+			border: 4px solid var(--bleepy-ink);
+			border-radius: 32px;
+			background: rgba(255, 255, 255, 0.5);
+			box-shadow: 0 24px 70px rgba(19, 32, 29, 0.18);
+			backdrop-filter: blur(18px);
+			padding: 28px;
+		}
+		.kicker {
+			display: inline-block;
+			padding: 6px 10px;
+			border: 2px solid var(--bleepy-ink);
+			border-radius: 999px;
+			background: var(--bleepy-lime);
+			font-size: 0.72rem;
+			font-weight: 900;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+		}
+		h1 {
+			margin: 12px 0 6px;
+			font-size: clamp(2.4rem, 7vw, 4.2rem);
+			line-height: 0.88;
+			letter-spacing: -0.07em;
+			text-transform: uppercase;
+		}
+		.lede {
+			margin: 0 0 22px;
+			max-width: 42rem;
+			font-size: 1.05rem;
+			line-height: 1.45;
+			opacity: 0.88;
+		}
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+			gap: 16px;
+		}
+		.card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+			padding: 22px 14px 18px;
+			border: 3px solid var(--bleepy-ink);
+			border-radius: 24px;
+			background: rgba(255, 247, 227, 0.82);
+			box-shadow: 7px 7px 0 rgba(19, 32, 29, 0.14);
+		}
+		.card strong {
+			font-size: 0.78rem;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+		}
+		.card span.bleep {
+			font-weight: 800;
+			font-size: 0.95rem;
+		}
+		.card p {
+			margin: 0;
+			text-align: center;
+			font-size: 0.82rem;
+			line-height: 1.35;
+			opacity: 0.75;
+		}
+
+		/* ── real pet CSS (mirrors packages/web/src/styles.css) ── */
+		.baby-bleepy-bot {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+		}
+		.baby-bleepy-bot__bubble {
+			padding: 0.28rem 0.55rem;
+			border: 2px solid var(--bleepy-ink);
+			border-radius: 999px;
+			background: var(--bleepy-cream);
+			color: var(--bleepy-ink);
+			font-size: 0.72rem;
+			font-weight: 800;
+			box-shadow: 3px 3px 0 rgba(19, 32, 29, 0.18);
+			animation: baby-bleepy-bubble 2.4s ease-in-out infinite;
+		}
+		.baby-bleepy-bot__figure {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 5.2rem;
+			height: 5.5rem;
+			padding: 0;
+			border: 0;
+			background: transparent;
+			filter: drop-shadow(0 10px 18px rgba(8, 40, 32, 0.28));
+			animation: baby-bleepy-bob 2.6s ease-in-out infinite;
+		}
+		.baby-bleepy-bot__antenna {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			height: 1.25rem;
+			z-index: 2;
+		}
+		.baby-bleepy-bot__antenna-stem {
+			width: 3px;
+			height: 0.62rem;
+			background: var(--bleepy-lime);
+			border-radius: 2px;
+		}
+		.baby-bleepy-bot__antenna-bulb {
+			width: 0.82rem;
+			height: 0.82rem;
+			margin-top: -1px;
+			border-radius: 999px;
+			background: var(--bleepy-lime);
+			box-shadow: 0 0 12px rgba(213, 255, 103, 0.7);
+			animation: baby-bleepy-bulb 1.8s ease-in-out infinite;
+		}
+		.baby-bleepy-bot__body {
+			position: relative;
+			width: 4rem;
+			height: 3.4rem;
+			border: 3px solid var(--bleepy-cream);
+			border-radius: 1.2rem;
+			background: var(--bleepy-mint);
+			box-shadow: 0 0 0 2px rgba(19, 32, 29, 0.12);
+		}
+		.baby-bleepy-bot__body::before {
+			content: "";
+			position: absolute;
+			inset: 0 0 auto 0;
+			height: 58%;
+			border-radius: 1.05rem 1.05rem 0.55rem 0.55rem;
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent);
+		}
+		.baby-bleepy-bot__eye {
+			position: absolute;
+			top: 0.85rem;
+			width: 0.5rem;
+			height: 0.56rem;
+			border-radius: 999px;
+			background: var(--bleepy-ink);
+		}
+		.baby-bleepy-bot__eye--left { left: 0.75rem; }
+		.baby-bleepy-bot__eye--right { right: 0.75rem; }
+		.baby-bleepy-bot__mouth {
+			position: absolute;
+			left: 50%;
+			bottom: 0.65rem;
+			width: 1rem;
+			height: 0.48rem;
+			margin-left: -0.5rem;
+			border: 2.5px solid var(--bleepy-ink);
+			border-top: 0;
+			border-radius: 0 0 999px 999px;
+		}
+
+		.baby-bleepy-bot--working .baby-bleepy-bot__figure {
+			animation: baby-bleepy-work 0.55s ease-in-out infinite;
+		}
+		.baby-bleepy-bot--working .baby-bleepy-bot__antenna-bulb {
+			animation: baby-bleepy-bulb-fast 0.45s ease-in-out infinite;
+			box-shadow: 0 0 16px rgba(83, 243, 199, 0.9);
+		}
+		.baby-bleepy-bot--waiting .baby-bleepy-bot__figure {
+			animation: baby-bleepy-wait 1.1s ease-in-out infinite;
+		}
+		.baby-bleepy-bot--waiting .baby-bleepy-bot__mouth {
+			width: 0.62rem;
+			height: 0.62rem;
+			margin-left: -0.31rem;
+			border-radius: 999px;
+			border: 0;
+			background: var(--bleepy-ink);
+		}
+		.baby-bleepy-bot--waiting .baby-bleepy-bot__bubble {
+			background: #ffd9a3;
+			animation: baby-bleepy-bubble-attention 0.9s ease-in-out infinite;
+		}
+		.baby-bleepy-bot--error .baby-bleepy-bot__figure {
+			animation: baby-bleepy-error 0.35s ease-in-out infinite;
+		}
+		.baby-bleepy-bot--error .baby-bleepy-bot__body { background: #ff8f84; }
+		.baby-bleepy-bot--error .baby-bleepy-bot__mouth {
+			transform: scaleY(-1);
+			bottom: 0.48rem;
+		}
+		.baby-bleepy-bot--error .baby-bleepy-bot__antenna-bulb {
+			background: #ff6f61;
+			box-shadow: 0 0 12px rgba(255, 111, 97, 0.7);
+		}
+
+		@keyframes baby-bleepy-bob {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-5px); }
+		}
+		@keyframes baby-bleepy-work {
+			0%, 100% { transform: translateY(0) rotate(-2deg); }
+			50% { transform: translateY(-7px) rotate(2deg); }
+		}
+		@keyframes baby-bleepy-wait {
+			0%, 100% { transform: translateY(0) scale(1); }
+			50% { transform: translateY(-3px) scale(1.05); }
+		}
+		@keyframes baby-bleepy-error {
+			0%, 100% { transform: translateX(0); }
+			25% { transform: translateX(-3px); }
+			75% { transform: translateX(3px); }
+		}
+		@keyframes baby-bleepy-bulb {
+			0%, 100% { transform: scale(1); opacity: 0.9; }
+			50% { transform: scale(1.18); opacity: 1; }
+		}
+		@keyframes baby-bleepy-bulb-fast {
+			0%, 100% { transform: scale(0.9); }
+			50% { transform: scale(1.28); }
+		}
+		@keyframes baby-bleepy-bubble {
+			0%, 100% { transform: translateY(0); opacity: 0.92; }
+			50% { transform: translateY(-2px); opacity: 1; }
+		}
+		@keyframes baby-bleepy-bubble-attention {
+			0%, 100% { transform: scale(1); }
+			50% { transform: scale(1.06); }
+		}
+
+		.foot {
+			margin-top: 22px;
+			padding-top: 16px;
+			border-top: 2px dashed rgba(19, 32, 29, 0.22);
+			font-size: 0.88rem;
+			line-height: 1.4;
+		}
+		.foot code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: rgba(19, 32, 29, 0.08);
+			font-size: 0.84em;
+		}
+	</style>
+</head>
+<body>
+	<main class="shell">
+		<div class="kicker">Zaraa pet preview</div>
+		<h1>Baby Bleepy Bot</h1>
+		<p class="lede">
+			Codex-style companion, Zaraa-flavored. Same mint body + lime antenna as the real dashboard pet.
+			Four moods, live CSS animations.
+		</p>
+
+		<div class="grid">
+			<article class="card">
+				<div class="baby-bleepy-bot baby-bleepy-bot--ready">
+					<div class="baby-bleepy-bot__bubble">bleep?</div>
+					<div class="baby-bleepy-bot__figure" aria-hidden="true">
+						<span class="baby-bleepy-bot__antenna">
+							<span class="baby-bleepy-bot__antenna-stem"></span>
+							<span class="baby-bleepy-bot__antenna-bulb"></span>
+						</span>
+						<span class="baby-bleepy-bot__body">
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--left"></span>
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--right"></span>
+							<span class="baby-bleepy-bot__mouth"></span>
+						</span>
+					</div>
+				</div>
+				<strong>Ready</strong>
+				<span class="bleep">bleep?</span>
+				<p>Idle, bobbing, watching Zaraa.</p>
+			</article>
+
+			<article class="card">
+				<div class="baby-bleepy-bot baby-bleepy-bot--working">
+					<div class="baby-bleepy-bot__bubble">bleep bleep!</div>
+					<div class="baby-bleepy-bot__figure" aria-hidden="true">
+						<span class="baby-bleepy-bot__antenna">
+							<span class="baby-bleepy-bot__antenna-stem"></span>
+							<span class="baby-bleepy-bot__antenna-bulb"></span>
+						</span>
+						<span class="baby-bleepy-bot__body">
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--left"></span>
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--right"></span>
+							<span class="baby-bleepy-bot__mouth"></span>
+						</span>
+					</div>
+				</div>
+				<strong>Working</strong>
+				<span class="bleep">bleep bleep!</span>
+				<p>Thinking / tools — antenna hyperblinks.</p>
+			</article>
+
+			<article class="card">
+				<div class="baby-bleepy-bot baby-bleepy-bot--waiting">
+					<div class="baby-bleepy-bot__bubble">need you!</div>
+					<div class="baby-bleepy-bot__figure" aria-hidden="true">
+						<span class="baby-bleepy-bot__antenna">
+							<span class="baby-bleepy-bot__antenna-stem"></span>
+							<span class="baby-bleepy-bot__antenna-bulb"></span>
+						</span>
+						<span class="baby-bleepy-bot__body">
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--left"></span>
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--right"></span>
+							<span class="baby-bleepy-bot__mouth"></span>
+						</span>
+					</div>
+				</div>
+				<strong>Waiting</strong>
+				<span class="bleep">need you!</span>
+				<p>Approval pending — little o mouth.</p>
+			</article>
+
+			<article class="card">
+				<div class="baby-bleepy-bot baby-bleepy-bot--error">
+					<div class="baby-bleepy-bot__bubble">bleep…</div>
+					<div class="baby-bleepy-bot__figure" aria-hidden="true">
+						<span class="baby-bleepy-bot__antenna">
+							<span class="baby-bleepy-bot__antenna-stem"></span>
+							<span class="baby-bleepy-bot__antenna-bulb"></span>
+						</span>
+						<span class="baby-bleepy-bot__body">
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--left"></span>
+							<span class="baby-bleepy-bot__eye baby-bleepy-bot__eye--right"></span>
+							<span class="baby-bleepy-bot__mouth"></span>
+						</span>
+					</div>
+				</div>
+				<strong>Uh-oh</strong>
+				<span class="bleep">bleep…</span>
+				<p>Error state — coral blush + frown.</p>
+			</article>
+		</div>
+
+		<p class="foot">
+			Live in the dashboard (bottom-left). Toggle via command palette → search
+			<code>pet</code>. Preview path:
+			<code>/baby-bleepy-preview.html</code>
+		</p>
+	</main>
+</body>
+</html>

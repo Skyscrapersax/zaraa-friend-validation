@@ -1,0 +1,37 @@
+{
+  "name": "@zaraa/deerflow-compat",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal DeerFlow/LangGraph compatibility safety kernel.",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "napi build --platform --release",
+    "test": "cargo test"
+  },
+  "napi": {
+    "binaryName": "deerflow_compat",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu"
+    ]
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0"
+  }
+}

@@ -1,0 +1,38 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
+	"assist": { "enabled": true },
+	"files": {
+		"includes": ["**", "!**/dist", "!**/coverage", "!.claude"]
+	},
+	"css": {
+		"parser": { "tailwindDirectives": true },
+		"formatter": { "enabled": true }
+	},
+	"linter": {
+		"enabled": true,
+		"rules": { "recommended": true }
+	},
+	"overrides": [
+		{
+			"includes": [
+				"**/__tests__/**",
+				"**/*.test.ts",
+				"**/*.test.tsx",
+				"**/*.test.mjs",
+				"**/*.spec.ts",
+				"**/*.spec.tsx",
+				"tests/**"
+			],
+			"linter": {
+				"rules": {
+					"suspicious": { "noExplicitAny": "warn" },
+					"style": { "noNonNullAssertion": "warn" }
+				}
+			}
+		}
+	],
+	"formatter": {
+		"indentStyle": "tab",
+		"lineWidth": 100
+	}
+}

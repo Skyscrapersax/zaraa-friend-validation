@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bleepybot Scene (autopilot)</title>
+	<style>
+		/*
+		 * Deterministic, non-interactive "cinematic" derivative of the root
+		 * bleepybot.html game. There is no UI chrome, no input, no wall-clock, and no
+		 * unseeded randomness: a headless renderer can step the scene frame-by-frame
+		 * via window.__bleepyFrame(n) and capture byte-identical output for the same
+		 * seed. Everything that was time/input/RNG driven in the game has been
+		 * re-derived from (seed, frameIndex).
+		 *
+		 * RENDER SURFACE: a single live <canvas> (#game) at the literal pixel
+		 * dimensions from the SceneSpec — the SAME 2D draw code (drawGrid/drawBot/
+		 * draw/roundRect) the proven prior bleepybot renders were made from. There is
+		 * exactly ONE rendering path: window.__bleepyFrame(n) re-simulates from frame
+		 * 0 and paints the canvas; the renderer screenshots that canvas.
+		 *
+		 * REQUIRED LAUNCH FLAGS (renderer author MUST use one of these): headless
+		 * Chromium launched with bare chromium.launch() composites a large raster
+		 * canvas into page.screenshot() NON-DETERMINISTICALLY (intermittently a
+		 * partial/blank frame — fatal for byte-determinism). Forcing software
+		 * compositing fixes it completely. Measured at 1080x1920, frame 60, N=20:
+		 *   bare launch       -> 0/20 blank but 2 distinct hashes (NON-deterministic)
+		 *   --use-gl=swiftshader -> 0/20 blank, 1 unique hash (deterministic) ✓
+		 *   --disable-gpu        -> 0/20 blank, 1 unique hash (deterministic) ✓
+		 * Launch as: chromium.launch({ args: ["--use-gl=swiftshader"] })
+		 */
+		* { box-sizing: border-box; }
+		html, body { margin: 0; padding: 0; background: #101f2e; overflow: hidden; }
+		#game {
+			display: block;
+			/* Literal pixel dims — no CSS scaling, no devicePixelRatio. */
+		}
+	</style>
+</head>
+<body>
+	<canvas id="game"></canvas>
+	<script>
+		"use strict";
+
+		// ---- Spec ----------------------------------------------------------------
+		// The renderer injects window.__BLEEPY_SCENE__ via an init script before
+		// load. Fall back to a default spec so the file is also openable standalone.
+		const spec = (typeof window !== "undefined" && window.__BLEEPY_SCENE__) || {
+			seed: 1,
+			durationSec: 4,
+			fps: 30,
+			aspectRatios: ["1080x1920"],
+			palette: { bg: "#06080f", primary: "#ff2ea6", accent: "#2dd4bf", text: "#f6efe3" },
+			message: { lines: ["bleepybot"], style: "kinetic", timingSec: [] },
+		};
+
+		const palette = spec.palette || {};
+		const TEXT_COLOR = palette.text || "#f6efe3";
+		const fps = spec.fps && spec.fps > 0 ? spec.fps : 30;
+		const DT = 1 / fps; // fixed timestep — the ONLY source of "time"
+
+		// Canvas dimensions come from the first aspectRatios entry ("1080x1920").
+		// Render at literal pixels; do NOT apply devicePixelRatio (machine-variant).
+		const canvas = document.querySelector("#game");
+		const aspect = (spec.aspectRatios && spec.aspectRatios[0]) || "1080x1920";
+		const dims = aspect.split("x");
+		const CW = parseInt(dims[0], 10) || 1080;
+		const CH = parseInt(dims[1], 10) || 1920;
+		canvas.width = CW;
+		canvas.height = CH;
+		const ctx = canvas.getContext("2d", { alpha: false });
+
+		// ---- Seeded RNG (mulberry32) --------------------------------------------
+		// Replaces every Math.random()/rand() in the original. A fresh generator is
+		// created from spec.seed each time we (re)build the world, so re-simulating
+		// from frame 0 always yields the identical sequence.
+		function mulberry32(a) {
+			return function () {
+				a |= 0;
+				a = (a + 0x6d2b79f5) | 0;
+				let t = Math.imul(a ^ (a >>> 15), 1 | a);
+				t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+				return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+			};
+		}
+
+		// `rng` is rebound on every world build (see buildWorld).
+		let rng = mulberry32(spec.seed >>> 0);
+		function rand(min, max) {
+			return rng() * (max - min) + min;
+		}
+
+		function distance(a, b) {
+			return Math.hypot(a.x - b.x, a.y - b.y);
+		}
+
+		// ---- World state ---------------------------------------------------------
+		const state = {
+			pips: [],
+			bugs: [],
+			sparks: [],
+			bot: { x: CW / 2, y: CH / 2, r: 23, vx: 0, vy: 0, face: 1 },
+			// Deterministic autopilot path parameters (seeded once per build).
+			path: null,
+		};
+
+		function spawnPip() {
+			state.pips.push({
+				x: rand(54, CW - 54),
+				y: rand(54, CH - 54),
+				r: rand(8, 13),
+				phase: rand(0, Math.PI * 2),
+			});
+		}
+
+		function spawnBug() {
+			const side = Math.floor(rand(0, 4));
+			state.bugs.push({
+				x: side === 0 ? -20 : side === 1 ? CW + 20 : rand(0, CW),
+				y: side === 2 ? -20 : side === 3 ? CH + 20 : rand(0, CH),
+				r: rand(13, 19),
+				speed: rand(42, 72),
+				wobble: rand(0, Math.PI * 2),
+			});
+		}
+
+		// Build (or rebuild) the world from scratch using a fresh seeded RNG. This
+		// is called at the start of every frame-step so the simulation is a pure
+		// function of (seed, frameIndex).
+		function buildWorld() {
+			rng = mulberry32(spec.seed >>> 0);
+			state.pips = [];
+			state.bugs = [];
+			state.sparks = [];
+			state.bot = { x: CW / 2, y: CH / 2, r: 23, vx: 0, vy: 0, face: 1 };
+
+			// Seeded autopilot path: a Lissajous-ish trajectory whose frequencies,
+			// phases and amplitude are drawn from the RNG so a different seed yields
+			// a visibly different bot trajectory.
+			state.path = {
+				ax: CW * rand(0.22, 0.34),
+				ay: CH * rand(0.22, 0.34),
+				fx: rand(0.18, 0.42),
+				fy: rand(0.18, 0.42),
+				px: rand(0, Math.PI * 2),
+				py: rand(0, Math.PI * 2),
+				cx: CW * rand(0.4, 0.6),
+				cy: CH * rand(0.4, 0.6),
+			};
+
+			for (let i = 0; i < 9; i += 1) spawnPip();
+			for (let i = 0; i < 4; i += 1) spawnBug();
+		}
+
+		// Deterministic autopilot target for the bot at scene-time t (seconds).
+		function autopilotTarget(t) {
+			const p = state.path;
+			return {
+				x: p.cx + Math.cos(t * p.fx * Math.PI * 2 + p.px) * p.ax,
+				y: p.cy + Math.sin(t * p.fy * Math.PI * 2 + p.py) * p.ay,
+			};
+		}
+
+		function addSparks(x, y, color, count) {
+			for (let i = 0; i < count; i += 1) {
+				state.sparks.push({
+					x,
+					y,
+					vx: rand(-130, 130),
+					vy: rand(-130, 130),
+					life: rand(0.28, 0.7),
+					color,
+				});
+			}
+		}
+
+		// ---- Simulation step -----------------------------------------------------
+		// `t` is scene-time in seconds, derived from the frame index, never wall
+		// clock. The bot chases the seeded autopilot target instead of reading keys.
+		function update(dt, t) {
+			const bot = state.bot;
+			const target = autopilotTarget(t);
+
+			// Steer toward the seeded target (replaces arrow-key acceleration).
+			let dx = target.x - bot.x;
+			let dy = target.y - bot.y;
+			const mag = Math.hypot(dx, dy) || 1;
+			bot.vx += (dx / mag) * 840 * dt;
+			bot.vy += (dy / mag) * 840 * dt;
+			bot.vx *= 0.84;
+			bot.vy *= 0.84;
+			bot.x = Math.max(bot.r, Math.min(CW - bot.r, bot.x + bot.vx * dt));
+			bot.y = Math.max(bot.r, Math.min(CH - bot.r, bot.y + bot.vy * dt));
+			if (Math.abs(bot.vx) > 6) bot.face = Math.sign(bot.vx);
+
+			for (let i = state.pips.length - 1; i >= 0; i -= 1) {
+				const pip = state.pips[i];
+				pip.phase += dt * 5;
+				if (distance(bot, pip) < bot.r + pip.r + 4) {
+					state.pips.splice(i, 1);
+					addSparks(pip.x, pip.y, "#d5ff67", 14);
+					spawnPip();
+					if (state.pips.length < 10) spawnPip();
+					// beep() intentionally NOT called from the headless render path.
+				}
+			}
+
+			for (const bug of state.bugs) {
+				// Wobble derives from scene-time t, not performance.now().
+				const angle =
+					Math.atan2(bot.y - bug.y, bot.x - bug.x) + Math.sin(t * 2.5 + bug.wobble) * 0.8;
+				bug.x += Math.cos(angle) * bug.speed * dt;
+				bug.y += Math.sin(angle) * bug.speed * dt;
+				if (distance(bot, bug) < bot.r + bug.r) {
+					addSparks(bot.x, bot.y, "#ff6f61", 18);
+					const push = Math.atan2(bot.y - bug.y, bot.x - bug.x);
+					bot.vx += Math.cos(push) * 280;
+					bot.vy += Math.sin(push) * 280;
+					bug.x -= Math.cos(push) * 70;
+					bug.y -= Math.sin(push) * 70;
+				}
+			}
+
+			if (state.bugs.length < 4 + Math.floor(t / 14)) {
+				spawnBug();
+			}
+
+			for (let i = state.sparks.length - 1; i >= 0; i -= 1) {
+				const spark = state.sparks[i];
+				spark.life -= dt;
+				spark.x += spark.vx * dt;
+				spark.y += spark.vy * dt;
+				spark.vx *= 0.92;
+				spark.vy *= 0.92;
+				if (spark.life <= 0) state.sparks.splice(i, 1);
+			}
+		}
+
+		// ==========================================================================
+		// CANVAS DRAW ROUTINES (the ONE rendering surface; t = frame/fps).
+		// Preserved verbatim from the game — these are the exact draws the proven
+		// prior bleepybot renders were made from. The renderer screenshots #game.
+		// ==========================================================================
+		function roundRect(x, y, w, h, r) {
+			ctx.beginPath();
+			ctx.moveTo(x + r, y);
+			ctx.lineTo(x + w - r, y);
+			ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+			ctx.lineTo(x + w, y + h - r);
+			ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+			ctx.lineTo(x + r, y + h);
+			ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+			ctx.lineTo(x, y + r);
+			ctx.quadraticCurveTo(x, y, x + r, y);
+			ctx.closePath();
+		}
+
+		function drawGrid(tMs) {
+			ctx.save();
+			ctx.strokeStyle = "rgba(213, 255, 103, 0.08)";
+			ctx.lineWidth = 1;
+			const offset = (tMs / 28) % 34;
+			for (let x = -34 + offset; x < CW + 34; x += 34) {
+				ctx.beginPath();
+				ctx.moveTo(x, 0);
+				ctx.lineTo(x, CH);
+				ctx.stroke();
+			}
+			for (let y = -34 + offset; y < CH + 34; y += 34) {
+				ctx.beginPath();
+				ctx.moveTo(0, y);
+				ctx.lineTo(CW, y);
+				ctx.stroke();
+			}
+			ctx.restore();
+		}
+
+		function drawBot(tMs) {
+			const b = state.bot;
+			ctx.save();
+			ctx.translate(b.x, b.y + Math.sin(tMs / 160) * 2);
+			ctx.scale(b.face, 1);
+			ctx.fillStyle = "#53f3c7";
+			ctx.strokeStyle = "#fff7e3";
+			ctx.lineWidth = 4;
+			roundRect(-28, -22, 56, 46, 14);
+			ctx.fill();
+			ctx.stroke();
+
+			ctx.fillStyle = "#13201d";
+			ctx.beginPath();
+			ctx.arc(-12, -4, 5, 0, Math.PI * 2);
+			ctx.arc(12, -4, 5, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.strokeStyle = "#13201d";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(-9, 12);
+			ctx.quadraticCurveTo(0, 18 + Math.sin(tMs / 90) * 2, 10, 12);
+			ctx.stroke();
+
+			ctx.strokeStyle = "#d5ff67";
+			ctx.lineWidth = 4;
+			ctx.beginPath();
+			ctx.moveTo(0, -22);
+			ctx.lineTo(0, -38);
+			ctx.stroke();
+			ctx.fillStyle = "#d5ff67";
+			ctx.beginPath();
+			ctx.arc(0, -42, 7 + Math.sin(tMs / 120) * 2, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.restore();
+		}
+
+		function draw(t) {
+			const tMs = t * 1000;
+			ctx.clearRect(0, 0, CW, CH);
+			const gradient = ctx.createRadialGradient(CW * 0.5, CH * 0.38, 40, CW * 0.5, CH * 0.45, Math.max(CW, CH));
+			gradient.addColorStop(0, "#18395a");
+			gradient.addColorStop(1, "#101f2e");
+			ctx.fillStyle = gradient;
+			ctx.fillRect(0, 0, CW, CH);
+			drawGrid(tMs);
+
+			for (const pip of state.pips) {
+				const pulse = Math.sin(pip.phase) * 2;
+				ctx.fillStyle = "#d5ff67";
+				ctx.shadowColor = "#d5ff67";
+				ctx.shadowBlur = 18;
+				ctx.beginPath();
+				ctx.arc(pip.x, pip.y, pip.r + pulse, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.shadowBlur = 0;
+			}
+
+			for (const bug of state.bugs) {
+				ctx.save();
+				ctx.translate(bug.x, bug.y);
+				ctx.rotate(Math.sin(tMs / 280 + bug.wobble) * 0.35);
+				ctx.fillStyle = "#ff6f61";
+				ctx.strokeStyle = "#fff7e3";
+				ctx.lineWidth = 3;
+				roundRect(-bug.r, -bug.r, bug.r * 2, bug.r * 2, 7);
+				ctx.fill();
+				ctx.stroke();
+				ctx.fillStyle = "#13201d";
+				ctx.fillRect(-7, -4, 5, 5);
+				ctx.fillRect(4, -4, 5, 5);
+				ctx.restore();
+			}
+
+			drawBot(tMs);
+
+			for (const spark of state.sparks) {
+				ctx.globalAlpha = Math.max(0, spark.life);
+				ctx.fillStyle = spark.color;
+				ctx.fillRect(spark.x, spark.y, 4, 4);
+			}
+			ctx.globalAlpha = 1;
+
+			drawMessage(t);
+		}
+
+		// Message overlay (spec.message.lines, revealed against timingSec, drawn in
+		// spec.palette.text). Centered vertically; one line per entry.
+		function drawMessage(t) {
+			const message = spec.message || {};
+			const lines = message.lines || [];
+			if (lines.length === 0) return;
+			const timing = message.timingSec || [];
+			const fontSize = Math.round(CW * 0.075);
+			const lineGap = fontSize * 1.3;
+			const startY = CH * 0.5 - ((lines.length - 1) * lineGap) / 2;
+			ctx.save();
+			ctx.font = '900 ' + fontSize + 'px Arial, sans-serif';
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillStyle = TEXT_COLOR;
+			for (let i = 0; i < lines.length; i += 1) {
+				// Reveal each line at its timingSec cue when provided; else show all.
+				const cue = timing.length > i ? timing[i] : 0;
+				if (t < cue) continue;
+				ctx.fillText(String(lines[i]), CW / 2, startY + i * lineGap);
+			}
+			ctx.restore();
+		}
+
+		// ---- Audio (kept defined, never called from the render path) -------------
+		let audioCtx = null;
+		function beep(freq, duration, type, gain) {
+			// Defined for parity with the game / future live preview, but the
+			// headless render path must never invoke it — visuals stay independent
+			// of AudioContext (which does not run headless).
+			if (typeof window === "undefined" || !(window.AudioContext || window.webkitAudioContext)) return;
+			audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+			const osc = audioCtx.createOscillator();
+			const amp = audioCtx.createGain();
+			osc.type = type || "square";
+			osc.frequency.value = freq;
+			amp.gain.setValueAtTime(gain || 0.035, audioCtx.currentTime);
+			amp.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (duration || 0.08));
+			osc.connect(amp).connect(audioCtx.destination);
+			osc.start();
+			osc.stop(audioCtx.currentTime + (duration || 0.08));
+		}
+
+		// ---- Frame-step hook -----------------------------------------------------
+		// Re-simulate the entire scene from frame 0 to frame `n` with a fixed dt.
+		// Re-simulating from 0 every call makes each frame a pure function of
+		// (seed, n) — the strongest determinism guarantee, and safe to call for
+		// frames 0..N in any order.
+		function simulateTo(n) {
+			const target = Math.max(0, Math.floor(n));
+			buildWorld();
+			for (let f = 1; f <= target; f += 1) {
+				update(DT, f * DT);
+			}
+			return target;
+		}
+
+		function renderFrame(n) {
+			const target = simulateTo(n);
+			const t = target * DT;
+			draw(t); // the one captured surface (#game canvas)
+			return target;
+		}
+
+		// Frame-step entry point. Fully synchronous: simulate from frame 0 and paint
+		// the canvas. Determinism is guaranteed because the result is a pure function
+		// of (seed, n) with no wall-clock, input, or unseeded randomness. The canvas
+		// is painted synchronously, so the surface is ready the moment this returns
+		// (the renderer must launch Chromium with --use-gl=swiftshader so the canvas
+		// composites into page.screenshot() deterministically — see header comment).
+		window.__bleepyFrame = function (n) {
+			return renderFrame(n);
+		};
+
+		// Render frame 0 immediately so a standalone open shows something.
+		renderFrame(0);
+	</script>
+</body>
+</html>

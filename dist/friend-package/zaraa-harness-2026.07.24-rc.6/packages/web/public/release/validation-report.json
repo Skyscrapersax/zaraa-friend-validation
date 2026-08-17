@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T22:45:04.290Z",
+  "status": "watch",
+  "safeToShare": false,
+  "blockers": [
+    "Archive hashes and platform promotion evidence are maintained by the package sender, outside this immutable installed kit."
+  ],
+  "warnings": [],
+  "platformMatrix": [
+    {
+      "platform": "macOS",
+      "status": "untested",
+      "detail": "Distributor validation evidence is not stored inside the installed kit."
+    },
+    {
+      "platform": "Windows",
+      "status": "untested",
+      "detail": "Distributor validation evidence is not stored inside the installed kit."
+    },
+    {
+      "platform": "Linux",
+      "status": "untested",
+      "detail": "Distributor validation evidence is not stored inside the installed kit."
+    }
+  ]
+}

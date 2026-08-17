@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T01:06:35.625Z",
+  "platform": "Linux",
+  "validation": "clean-temp-folder-install",
+  "version": "2026.07.24-rc.6",
+  "packageGeneratedAt": "2026-08-16T01:04:46.508Z",
+  "status": "pass",
+  "provenance": {
+    "os": {
+      "platform": "linux",
+      "release": "6.8.0-117-generic"
+    },
+    "architecture": "arm64",
+    "nodeVersion": "v25.9.0",
+    "pnpmVersion": "9.15.4"
+  },
+  "safeBoundaries": {
+    "installer": "/Users/zaraa/Code/zara-linuxval/dist/friend-package/zaraa-harness-2026.07.24-rc.6/installers/install-macos-linux.sh",
+    "packageDirectory": "/Users/zaraa/Code/zara-linuxval/dist/friend-package/zaraa-harness-2026.07.24-rc.6",
+    "tempBase": "/tmp/zaraa-linux-clean-install.XIMrnt",
+    "homeOverride": "/tmp/zaraa-linux-clean-install.XIMrnt/home",
+    "zaraaDirOverride": "/tmp/zaraa-linux-clean-install.XIMrnt/install/zaraa",
+    "realHomeTouched": false,
+    "realZaraaConfigTouched": false,
+    "cleanupRequired": true
+  },
+  "command": "ZARAA_HOME_DIR=<temp>/home ZARAA_DIR=<temp>/install/zaraa COREPACK_HOME=<temp>/corepack PNPM_HOME=<temp>/pnpm XDG_CACHE_HOME=<temp>/cache XDG_DATA_HOME=<temp>/data XDG_STATE_HOME=<temp>/state npm_config_cache=<temp>/npm-cache npm_config_store_dir=<temp>/pnpm-store npm_config_userconfig=<temp>/npmrc bash installers/install-macos-linux.sh",
+  "exitCode": 0,
+  "evidence": {
+    "targetExists": true,
+    "tempConfigExists": true,
+    "packageJsonExists": true,
+    "installedReleaseMarkerExists": true,
+    "nodeModulesExists": true,
+    "startScriptExists": true,
+    "friendInstallDocExists": true,
+    "gatewayStarted": true,
+    "dashboardRoutesPassed": true
+  },
+  "runtimeSmoke": {
+    "status": "pass",
+    "checks": [
+      {
+        "route": "/ship-readiness",
+        "status": "pass",
+        "detail": "HTTP 200; Cache-Control: no-store, max-age=0, must-revalidate"
+      },
+      {
+        "route": "/cockpit",
+        "status": "pass",
+        "detail": "HTTP 200; Cache-Control: no-store, max-age=0, must-revalidate"
+      },
+      {
+        "route": "/dashboard",
+        "status": "pass",
+        "detail": "HTTP 200; Cache-Control: no-store, max-age=0, must-revalidate"
+      },
+      {
+        "route": "/brain-map",
+        "status": "pass",
+        "detail": "HTTP 200; Cache-Control: no-store, max-age=0, must-revalidate"
+      }
+    ],
+    "logPath": "/tmp/zaraa-linux-clean-install.XIMrnt/runtime-output.log"
+  },
+  "configSafety": {
+    "status": "pass",
+    "checks": {
+      "gatewayKeyConfigured": true,
+      "gatewayTrustedDisabled": true,
+      "autonomyDisabled": true,
+      "minimalUntilProviderSetup": true,
+      "scheduledTasksDisabled": true,
+      "overnightDisabled": true,
+      "tradingPaperOnly": true,
+      "tradingBackgroundDisabled": true,
+      "predictionsPaperOnly": true,
+      "calendarDisabled": true,
+      "imessageDisabled": true,
+      "voiceDisabled": true
+    }
+  },
+  "logTail": [
+    "{\"level\":\"info\",\"time\":1786842395386,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Trace store + bandit router + skill discovery + reasoning cache initialized\"}",
+    "{\"level\":\"info\",\"time\":1786842395386,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"LLM classifier initialized (phi4-mini-zaraa)\"}",
+    "{\"level\":\"info\",\"time\":1786842395398,\"service\":\"zaraa\",\"module\":\"task-runner\",\"paused\":false,\"msg\":\"Task generation resumed\"}",
+    "{\"level\":\"info\",\"time\":1786842395398,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Briefing tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395399,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Partnership trust tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395399,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Task tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395400,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Creative project tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395400,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Zodiac tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395413,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Deal pipeline tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395413,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"First-ten earn tools registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395413,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"Routing analytics tool registered\"}",
+    "{\"level\":\"info\",\"time\":1786842395414,\"service\":\"zaraa\",\"module\":\"zaraa\",\"msg\":\"First-ten live intake timer started (15m)\"}",
+    "{\"level\":\"info\",\"time\":1786842395414,\"service\":\"zaraa\",\"module\":\"cron-scheduler\",\"msg\":\"[CronScheduler] Disabled \\\"daily-crypto-discipline\\\"\"}",
+    "{\"level\":\"info\",\"time\":1786842395414,\"service\":\"zaraa\",\"module\":\"cron-scheduler\",\"msg\":\"[CronScheduler] Disabled \\\"morning-command-cycle\\\"\"}",
+    "{\"level\":\"info\",\"time\":1786842395414,\"service\":\"zaraa\",\"module\":\"cron-scheduler\",\"msg\":\"[CronScheduler] Disabled \\\"evening-command-cycle\\\"\"}",
+    "{\"level\":\"info\",\"time\":1786842395414,\"service\":\"zaraa\",\"module\":\"cron-scheduler\",\"msg\":\"[CronScheduler] Disabled \\\"earner:first-ten-intake\\\"\"}",
+    "{\"level\":\"info\",\"time\":1786842395415,\"service\":\"zaraa\",\"module\":\"cron-scheduler\",\"msg\":\"[CronScheduler] Started with 0 active task(s), 4 disabled\"}",
+    "{\"level\":\"info\",\"time\":1786842395417,\"service\":\"zaraa\",\"module\":\"task-runner\",\"paused\":false,\"msg\":\"Task execution resumed\"}",
+    "{\"level\":\"info\",\"time\":1786842395532,\"service\":\"zaraa\",\"module\":\"zaraa\",\"pnl\":0,\"closedTrades\":0,\"msg\":\"TF re-eval gate: TF PnL since 2026-05-09T00:00:00.000Z: $0.00 across 0 trade(s) — disabling (previous mode: off)\"}",
+    "{\"level\":\"info\",\"time\":1786842395555,\"service\":\"zaraa\",\"module\":\"launcher\",\"msg\":\"Prediction runtime initialized\"}",
+    "[zaraa-daemon] Startup health check: gateway OK",
+    "[zaraa-daemon] Uptime tracking: start recorded (id=1)",
+    "{\"level\":\"debug\",\"time\":1786842395588,\"service\":\"zaraa\",\"module\":\"gateway\",\"ts\":\"2026-08-16T01:06:35.588Z\",\"method\":\"GET\",\"path\":\"/ship-readiness\",\"status\":200,\"durationMs\":0,\"msg\":\"request\"}",
+    "{\"level\":\"debug\",\"time\":1786842395591,\"service\":\"zaraa\",\"module\":\"gateway\",\"ts\":\"2026-08-16T01:06:35.591Z\",\"method\":\"GET\",\"path\":\"/cockpit\",\"status\":200,\"durationMs\":1,\"msg\":\"request\"}",
+    "{\"level\":\"debug\",\"time\":1786842395592,\"service\":\"zaraa\",\"module\":\"gateway\",\"ts\":\"2026-08-16T01:06:35.592Z\",\"method\":\"GET\",\"path\":\"/dashboard\",\"status\":200,\"durationMs\":0,\"msg\":\"request\"}",
+    "{\"level\":\"debug\",\"time\":1786842395594,\"service\":\"zaraa\",\"module\":\"gateway\",\"ts\":\"2026-08-16T01:06:35.594Z\",\"method\":\"GET\",\"path\":\"/brain-map\",\"status\":200,\"durationMs\":1,\"msg\":\"request\"}",
+    "[zaraa-daemon] Shutting down gracefully... (SIGTERM)",
+    "{\"level\":\"info\",\"time\":1786842395599,\"service\":\"zaraa\",\"module\":\"launcher\",\"msg\":\"Shutting down gracefully...\"}",
+    "{\"level\":\"info\",\"time\":1786842395617,\"service\":\"zaraa\",\"module\":\"launcher\",\"msg\":\"Shutdown complete\"}"
+  ],
+  "cleanup": {
+    "note": "Temporary validation folder retained for inspection. Delete it manually when no longer needed.",
+    "tempBase": "/tmp/zaraa-linux-clean-install.XIMrnt"
+  }
+}

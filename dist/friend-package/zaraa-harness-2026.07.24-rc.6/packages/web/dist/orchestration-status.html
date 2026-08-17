@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="data:," />
+		<title>Zara orchestration status</title>
+		<style>
+			:root {
+				color-scheme: dark;
+				font-family:
+					Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+					sans-serif;
+				--bg: #0b1020;
+				--panel: #121a2c;
+				--border: #263451;
+				--text: #edf2ff;
+				--muted: #a9b4cc;
+				--ok: #57d39b;
+				--warn: #f4bc55;
+				--error: #ff7c87;
+				--idle: #8491aa;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--text);
+			}
+
+			main {
+				width: min(1180px, 100%);
+				margin: 0 auto;
+				padding: 24px;
+			}
+
+			header,
+			.meta,
+			.actions {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				flex-wrap: wrap;
+			}
+
+			header {
+				justify-content: space-between;
+				margin-bottom: 18px;
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(1.4rem, 3vw, 2rem);
+			}
+
+			p {
+				margin: 0;
+			}
+
+			#objective {
+				color: var(--muted);
+				margin-top: 6px;
+			}
+
+			button,
+			a {
+				min-height: 40px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				padding: 8px 12px;
+				background: var(--panel);
+				color: var(--text);
+				font: inherit;
+				text-decoration: none;
+				cursor: pointer;
+			}
+
+			button:hover,
+			a:hover {
+				border-color: var(--muted);
+			}
+
+			button:focus-visible,
+			a:focus-visible {
+				outline: 3px solid var(--warn);
+				outline-offset: 2px;
+			}
+
+			.meta {
+				margin-bottom: 14px;
+				color: var(--muted);
+				font-size: 0.9rem;
+			}
+
+			#freshness.stale {
+				color: var(--warn);
+			}
+
+			#error {
+				margin-bottom: 14px;
+				color: var(--error);
+			}
+
+			.table-wrap {
+				overflow-x: auto;
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				background: var(--panel);
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				min-width: 850px;
+			}
+
+			th,
+			td {
+				padding: 14px;
+				text-align: left;
+				vertical-align: top;
+				border-bottom: 1px solid var(--border);
+			}
+
+			th {
+				color: var(--muted);
+				font-size: 0.78rem;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+			}
+
+			tr:last-child td {
+				border-bottom: 0;
+			}
+
+			.agent {
+				font-weight: 700;
+				white-space: nowrap;
+			}
+
+			.state {
+				display: inline-flex;
+				align-items: center;
+				gap: 7px;
+				white-space: nowrap;
+				text-transform: capitalize;
+			}
+
+			.state::before {
+				width: 9px;
+				height: 9px;
+				border-radius: 999px;
+				background: var(--idle);
+				content: "";
+			}
+
+			.state--running::before {
+				background: var(--ok);
+			}
+
+			.state--complete::before {
+				background: var(--idle);
+			}
+
+			.state--blocked::before {
+				background: var(--warn);
+			}
+
+			.state--failed::before {
+				background: var(--error);
+			}
+
+			.blocker--clear {
+				color: var(--muted);
+			}
+
+			.actions {
+				min-width: 130px;
+			}
+
+			.actions a {
+				min-height: 34px;
+				padding: 6px 9px;
+				font-size: 0.86rem;
+			}
+
+			.note {
+				margin-top: 12px;
+				color: var(--muted);
+				font-size: 0.85rem;
+			}
+
+			@media (prefers-color-scheme: light) {
+				:root {
+					color-scheme: light;
+					--bg: #f4f6fb;
+					--panel: #ffffff;
+					--border: #ccd3e0;
+					--text: #172033;
+					--muted: #58657a;
+					--ok: #14845b;
+					--warn: #9b6500;
+					--error: #b42335;
+					--idle: #6f7b8f;
+				}
+			}
+
+			@media (max-width: 640px) {
+				main {
+					padding: 16px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<header>
+				<div>
+					<h1>Orchestration status</h1>
+					<p id="objective">Loading current objective…</p>
+				</div>
+				<button id="refresh" type="button">Refresh</button>
+			</header>
+
+			<div class="meta" aria-live="polite">
+				<span id="updated">Snapshot not loaded</span>
+				<span aria-hidden="true">·</span>
+				<span id="freshness">Checking freshness…</span>
+			</div>
+
+			<p id="error" role="alert" hidden></p>
+
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th scope="col">Agent lane</th>
+							<th scope="col">State</th>
+							<th scope="col">Current task</th>
+							<th scope="col">Last result</th>
+							<th scope="col">Blocker</th>
+							<th scope="col">Existing views</th>
+						</tr>
+					</thead>
+					<tbody id="lanes"></tbody>
+				</table>
+			</div>
+
+			<p class="note">Read-only coordinator snapshot. Auto-refreshes every 10 seconds and flags stale data.</p>
+		</main>
+
+		<script type="module">
+			const endpoint = "./orchestration-status.json";
+			const knownStates = new Set(["running", "complete", "blocked", "failed", "idle"]);
+			const lanes = document.getElementById("lanes");
+			const objective = document.getElementById("objective");
+			const updated = document.getElementById("updated");
+			const freshness = document.getElementById("freshness");
+			const error = document.getElementById("error");
+			const refresh = document.getElementById("refresh");
+
+			function cell(value, className) {
+				const element = document.createElement("td");
+				element.textContent = value;
+				if (className) element.className = className;
+				return element;
+			}
+
+			function renderLinks(items) {
+				const td = document.createElement("td");
+				const wrapper = document.createElement("div");
+				wrapper.className = "actions";
+				for (const item of Array.isArray(items) ? items : []) {
+					if (!item?.label || !item?.href) continue;
+					const link = document.createElement("a");
+					link.textContent = item.label;
+					link.href = item.href;
+					wrapper.append(link);
+				}
+				if (!wrapper.childElementCount) wrapper.textContent = "—";
+				td.append(wrapper);
+				return td;
+			}
+
+			function renderLane(lane) {
+				const row = document.createElement("tr");
+				const state = knownStates.has(lane.state) ? lane.state : "idle";
+				row.append(cell(lane.agent || lane.id || "Unknown", "agent"));
+				row.append(cell(state, `state state--${state}`));
+				row.append(cell(lane.task || "No active task"));
+				row.append(cell(lane.lastResult || "No result yet"));
+				row.append(
+					cell(lane.blocker || "None", lane.blocker ? "blocker" : "blocker blocker--clear"),
+				);
+				row.append(renderLinks(lane.links));
+				return row;
+			}
+
+			function render(snapshot) {
+				lanes.replaceChildren();
+				objective.textContent = snapshot.objective || "No objective reported";
+				for (const lane of Array.isArray(snapshot.lanes) ? snapshot.lanes : []) {
+					lanes.append(renderLane(lane));
+				}
+
+				const generatedAt = new Date(snapshot.generatedAt);
+				const valid = Number.isFinite(generatedAt.getTime());
+				updated.textContent = valid
+					? `Updated ${generatedAt.toLocaleString()}`
+					: "Snapshot time unavailable";
+				const ageMs = valid ? Date.now() - generatedAt.getTime() : Number.POSITIVE_INFINITY;
+				const stale = ageMs > 5 * 60 * 1000;
+				freshness.textContent = stale ? "Stale — coordinator refresh needed" : "Current";
+				freshness.classList.toggle("stale", stale);
+				error.hidden = true;
+			}
+
+			async function load() {
+				refresh.disabled = true;
+				try {
+					const response = await fetch(`${endpoint}?t=${Date.now()}`, { cache: "no-store" });
+					if (!response.ok) throw new Error(`Status request failed (${response.status})`);
+					render(await response.json());
+				} catch (cause) {
+					error.textContent = cause instanceof Error ? cause.message : "Status request failed";
+					error.hidden = false;
+				} finally {
+					refresh.disabled = false;
+				}
+			}
+
+			refresh.addEventListener("click", load);
+			window.setInterval(load, 10_000);
+			void load();
+		</script>
+	</body>
+</html>

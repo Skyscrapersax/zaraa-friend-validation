@@ -1,0 +1,1 @@
+import{t as e}from"./index-B9Lo4w4Y.js";import{k as o}from"./react-vendor-BELSBECJ.js";const s=o()(r=>({dashboard:null,loading:!1,error:null,fetchDashboard:async()=>{try{const a=await e("/api/budget/dashboard");r({dashboard:a,loading:!1,error:null})}catch(a){r({loading:!1,error:a?.message||"Failed to fetch budget dashboard"})}}}));export{s as u};

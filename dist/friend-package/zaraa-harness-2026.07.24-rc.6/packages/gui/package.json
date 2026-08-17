@@ -1,0 +1,39 @@
+{
+  "name": "@zaraa/gui",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaraa-ai/zaraa.git",
+    "directory": "packages/gui"
+  },
+  "homepage": "https://github.com/zaraa-ai/zaraa#readme",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "typecheck": "tsc --noEmit",
+    "build:native": "node scripts/build-native-helper.mjs",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "demo:capture": "node scripts/demo-capture.mjs",
+    "demo:plan": "node scripts/demo-plan.mjs"
+  },
+  "dependencies": {
+    "@zaraa/shared": "workspace:*",
+    "pngjs": "^7.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "vitest": "^4.1.5"
+  }
+}

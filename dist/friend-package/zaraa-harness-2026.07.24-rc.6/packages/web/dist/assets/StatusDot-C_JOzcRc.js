@@ -1,0 +1,1 @@
+import{Z as s}from"./react-vendor-BELSBECJ.js";function e({tone:a,word:t,title:n}){return s.jsxs("span",{className:"ui-dot-line",title:n,children:[s.jsx("span",{className:`ui-dot ui-dot--${a}`,"aria-hidden":"true"}),t?s.jsx("span",{children:t}):null]})}export{e as S};

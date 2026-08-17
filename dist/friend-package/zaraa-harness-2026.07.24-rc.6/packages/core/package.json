@@ -1,0 +1,82 @@
+{
+	"name": "@zaraa/core",
+	"version": "0.0.1",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zaraa-ai/zaraa.git",
+		"directory": "packages/core"
+	},
+	"homepage": "https://github.com/zaraa-ai/zaraa#readme",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "./src/index.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"dataless:guard": "node ../../scripts/check-dataless-files.mjs . \"@zaraa/core build/test\"",
+		"prebuild": "pnpm run dataless:guard",
+		"build": "tsup",
+		"typecheck": "tsc --noEmit",
+		"predev": "pnpm run dataless:guard",
+		"dev": "tsup --watch",
+		"pretest": "pnpm run dataless:guard && node scripts/pretest-stale-dist.mjs",
+		"test": "vitest run",
+		"pretest:coverage": "pnpm run dataless:guard",
+		"test:coverage": "vitest run --coverage",
+		"pretest:flakes": "pnpm run dataless:guard",
+		"test:flakes": "FLAKE_SUITE=1 vitest run",
+		"flake-check": "node scripts/flake-gate.mjs"
+	},
+	"dependencies": {
+		"@anthropic-ai/sdk": "^0.78.0",
+		"@hono/node-server": "^2.0.1",
+		"@notionhq/client": "^2.3.0",
+		"@octokit/rest": "^22.0.0",
+		"@slack/bolt": "^4.7.2",
+		"@zaraa/deerflow-compat": "workspace:*",
+		"@zaraa/plugin-ableton": "workspace:*",
+		"@zaraa/plugin-calendar": "workspace:*",
+		"@zaraa/plugin-files": "workspace:*",
+		"@zaraa/plugin-ooda": "workspace:*",
+		"@zaraa/plugin-predictions": "workspace:*",
+		"@zaraa/plugin-shell": "workspace:*",
+		"@zaraa/plugin-studio": "workspace:*",
+		"@zaraa/plugin-trading": "workspace:*",
+		"@zaraa/plugin-web": "workspace:*",
+		"plugin-gui": "workspace:*",
+		"@zaraa/plugin-video": "workspace:*",
+		"@zaraa/sandbox": "workspace:*",
+		"@zaraa/shared": "workspace:*",
+		"better-sqlite3": "12.6.2",
+		"diff": "^9.0.0",
+		"googleapis": "^171.4.0",
+		"hono": "^4.12.16",
+		"oceanic.js": "^1.14.0",
+		"picomatch": "^4.0.3",
+		"pino": "^10.3.1",
+		"sqlite-vec": "^0.1.6",
+		"telegraf": "^4.16.0",
+		"twilio": "^5.5.1",
+		"ws": "^8.21.0",
+		"yaml": "^2.8.4",
+		"zod": "^3.25.0"
+	},
+	"devDependencies": {
+		"@types/better-sqlite3": "^7.6.13",
+		"@types/picomatch": "^4.0.2",
+		"@types/ws": "^8.18.1",
+		"tsup": "^8.5.1",
+		"vitest": "^4.1.5"
+	},
+	"optionalDependencies": {
+		"@cursor/sdk": "^1.0.12",
+		"@picovoice/porcupine-node": "^3.0.0",
+		"@picovoice/pvrecorder-node": "^1.2.0",
+		"@zaraa/plugin-vision": "workspace:*"
+	}
+}

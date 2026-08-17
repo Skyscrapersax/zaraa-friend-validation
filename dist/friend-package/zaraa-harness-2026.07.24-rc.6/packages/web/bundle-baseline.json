@@ -1,0 +1,254 @@
+{
+ "generated": "2026-08-16",
+ "note": "RC6 audit baseline; tolerance +10% gzip per chunk, +5% total",
+ "total": {
+  "raw": 2229641,
+  "gzip": 663523
+ },
+ "chunks": {
+  "ActivityFeed": {
+   "raw": 6904,
+   "gzip": 2348
+  },
+  "ActivityPanel": {
+   "raw": 2360,
+   "gzip": 1166
+  },
+  "AgentWorldPanel": {
+   "raw": 22876,
+   "gzip": 5942
+  },
+  "AnalyticsPanel": {
+   "raw": 13020,
+   "gzip": 4662
+  },
+  "ApprovalsPanel": {
+   "raw": 5769,
+   "gzip": 2341
+  },
+  "AuditPanel": {
+   "raw": 9718,
+   "gzip": 3115
+  },
+  "AutonomyPanel": {
+   "raw": 9214,
+   "gzip": 3112
+  },
+  "BleepyPanel": {
+   "raw": 41398,
+   "gzip": 10374
+  },
+  "BrainMapPanel": {
+   "raw": 44267,
+   "gzip": 12364
+  },
+  "ChatPanel": {
+   "raw": 68137,
+   "gzip": 18877
+  },
+  "Claw3DPanel": {
+   "raw": 19986,
+   "gzip": 5676
+  },
+  "CreativeLedger": {
+   "raw": 29991,
+   "gzip": 7377
+  },
+  "DashboardPanel": {
+   "raw": 256563,
+   "gzip": 76278
+  },
+  "DesignerStudio": {
+   "raw": 22306,
+   "gzip": 5598
+  },
+  "DocumentsPanel": {
+   "raw": 8577,
+   "gzip": 2826
+  },
+  "GuiAgentPanel": {
+   "raw": 8682,
+   "gzip": 2902
+  },
+  "HomePanel": {
+   "raw": 19187,
+   "gzip": 6857
+  },
+  "IdePanel": {
+   "raw": 23884,
+   "gzip": 7008
+  },
+  "Inspector": {
+   "raw": 895,
+   "gzip": 431
+  },
+  "LeaderboardPanel": {
+   "raw": 8105,
+   "gzip": 2843
+  },
+  "LegalPanel": {
+   "raw": 4511,
+   "gzip": 2072
+  },
+  "LivePanel": {
+   "raw": 5521,
+   "gzip": 2117
+  },
+  "MemoryPanel": {
+   "raw": 7242,
+   "gzip": 2342
+  },
+  "MissionControl": {
+   "raw": 98035,
+   "gzip": 22490
+  },
+  "MissionStackCockpitPanel": {
+   "raw": 13216,
+   "gzip": 4376
+  },
+  "ModelName": {
+   "raw": 525,
+   "gzip": 366
+  },
+  "OsrsLearningPanel": {
+   "raw": 23922,
+   "gzip": 5414
+  },
+  "PanelCard": {
+   "raw": 493,
+   "gzip": 289
+  },
+  "PublicRevenuePage": {
+   "raw": 19818,
+   "gzip": 4520
+  },
+  "PulsePanel": {
+   "raw": 9097,
+   "gzip": 3691
+  },
+  "RevenuePanel": {
+   "raw": 31573,
+   "gzip": 7436
+  },
+  "RiskMonitorPanel": {
+   "raw": 13582,
+   "gzip": 4193
+  },
+  "SectionLabel": {
+   "raw": 252,
+   "gzip": 187
+  },
+  "SelfEditPanel": {
+   "raw": 7292,
+   "gzip": 2567
+  },
+  "SettingsPanel": {
+   "raw": 18386,
+   "gzip": 5806
+  },
+  "ShareBar": {
+   "raw": 963,
+   "gzip": 469
+  },
+  "ShipReadinessPanel": {
+   "raw": 36741,
+   "gzip": 9993
+  },
+  "StatBlock": {
+   "raw": 1218,
+   "gzip": 600
+  },
+  "StatusDot": {
+   "raw": 269,
+   "gzip": 206
+  },
+  "SystemPanel": {
+   "raw": 31635,
+   "gzip": 9052
+  },
+  "TentaclesPanel": {
+   "raw": 20937,
+   "gzip": 6852
+  },
+  "TokenBudgetPanel": {
+   "raw": 19584,
+   "gzip": 6217
+  },
+  "TradingPanel": {
+   "raw": 40000,
+   "gzip": 9672
+  },
+  "VoiceButton": {
+   "raw": 2124,
+   "gzip": 860
+  },
+  "ZaraacodePanel": {
+   "raw": 58688,
+   "gzip": 17204
+  },
+  "autonomy-store": {
+   "raw": 1849,
+   "gzip": 703
+  },
+  "brain-map-actions": {
+   "raw": 3216,
+   "gzip": 1463
+  },
+  "budget-store": {
+   "raw": 349,
+   "gzip": 243
+  },
+  "charts-vendor": {
+   "raw": 358695,
+   "gzip": 102284
+  },
+  "content-vendor": {
+   "raw": 70468,
+   "gzip": 23179
+  },
+  "designer-project-store": {
+   "raw": 6090,
+   "gzip": 1658
+  },
+  "designer-studio": {
+   "raw": 24811,
+   "gzip": 8646
+  },
+  "format-count": {
+   "raw": 249,
+   "gzip": 210
+  },
+  "format-model-label": {
+   "raw": 1814,
+   "gzip": 813
+  },
+  "index": {
+   "raw": 218877,
+   "gzip": 64832
+  },
+  "react-vendor": {
+   "raw": 430643,
+   "gzip": 138258
+  },
+  "revenue-content": {
+   "raw": 5452,
+   "gzip": 2526
+  },
+  "risk-monitor-store": {
+   "raw": 2770,
+   "gzip": 870
+  },
+  "system-ram": {
+   "raw": 674,
+   "gzip": 398
+  },
+  "useChat": {
+   "raw": 12064,
+   "gzip": 4906
+  },
+  "zaraacoder-model-controls": {
+   "raw": 4157,
+   "gzip": 1446
+  }
+ }
+}

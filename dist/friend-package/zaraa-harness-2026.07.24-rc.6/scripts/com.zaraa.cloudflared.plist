@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Zaraa Cloudflare Tunnel launchd service.
+  Keeps `cloudflared tunnel run zaraa` alive so the gateway is always
+  reachable at the configured public hostname.
+
+  The setup script (scripts/setup-remote-access.sh) fills in __HOME__ and
+  __CLOUDFLARED__ (the absolute path to the cloudflared binary) before
+  installing this plist.
+
+  Manual install:
+    sed -e "s|__HOME__|$HOME|g" \
+        -e "s|__CLOUDFLARED__|$(command -v cloudflared)|g" \
+        scripts/com.zaraa.cloudflared.plist > ~/Library/LaunchAgents/com.zaraa.cloudflared.plist
+    launchctl load ~/Library/LaunchAgents/com.zaraa.cloudflared.plist
+
+  Prerequisites:
+    - `cloudflared tunnel login`  (one-time)
+    - `cloudflared tunnel create zaraa`  (creates ~/.cloudflared/<uuid>.json)
+    - `cloudflared tunnel route dns zaraa zaraa.<your-domain>`
+    - ~/.cloudflared/config.yml with ingress → http://localhost:3927
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.zaraa.cloudflared</string>
+
+	<key>ProgramArguments</key>
+	<array>
+		<string>__CLOUDFLARED__</string>
+		<string>tunnel</string>
+		<string>run</string>
+		<string>zaraa</string>
+	</array>
+
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+		<key>HOME</key>
+		<string>__HOME__</string>
+	</dict>
+
+	<key>RunAtLoad</key>
+	<true/>
+
+	<key>KeepAlive</key>
+	<dict>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+
+	<key>StandardOutPath</key>
+	<string>__HOME__/.zaraa/cloudflared.stdout.log</string>
+
+	<key>StandardErrorPath</key>
+	<string>__HOME__/.zaraa/cloudflared.stderr.log</string>
+
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+</dict>
+</plist>

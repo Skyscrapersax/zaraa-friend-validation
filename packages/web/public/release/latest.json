@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "name": "Zaraa Harness Friend Release",
+  "version": "2026.07.24-rc.6",
+  "channel": "friends",
+  "generatedAt": "2026-08-16T22:45:04.290Z",
+  "source": {
+    "vcs": "git",
+    "revision": "712573417878de150a598e58195f6784cfc113e6",
+    "clean": true
+  },
+  "package": {
+    "directory": "zaraa-harness-2026.07.24-rc.6",
+    "archives": [
+      {
+        "file": "zaraa-harness-2026.07.24-rc.6.tar.gz",
+        "bytes": 5331496,
+        "sha256": "1e5e969d21f55bef257c35abe8bd34271745893c9d8e33f172f3890c77eb1c52"
+      },
+      {
+        "file": "zaraa-harness-2026.07.24-rc.6.zip",
+        "bytes": 5712321,
+        "sha256": "3eeabe5d128eea0dc7151223326a598225086cedeaff184f7745c9d7fb7d3215"
+      }
+    ],
+    "totalArchiveBytes": 11043817,
+    "contents": {
+      "installers": [
+        "installers/install-macos-linux.sh",
+        "installers/install-windows.ps1",
+        "installers/start-macos-linux.sh",
+        "installers/start-windows.ps1"
+      ],
+      "docs": [
+        "docs/friend-harness-install-guide.md",
+        "docs/friend-package-handoff.md",
+        "docs/friend-release-notes-template.md",
+        "docs/friend-known-issues.md",
+        "docs/friend-platform-validation.md",
+        "docs/friend-platform-validation-handoff.md",
+        "FRIEND_INSTALL.md",
+        "START_HERE.html"
+      ]
+    }
+  },
+  "installers": {
+    "macLinux": "installers/install-macos-linux.sh",
+    "windows": "installers/install-windows.ps1",
+    "startMacLinux": "installers/start-macos-linux.sh",
+    "startWindows": "installers/start-windows.ps1"
+  },
+  "manifest": {
+    "file": "dist/release/zaraa-friend-release-manifest.json",
+    "artifacts": 65,
+    "generatedAt": "2026-08-16T22:45:03.817Z"
+  },
+  "docs": {
+    "installGuide": "docs/friend-harness-install-guide.md",
+    "handoffReadme": "docs/friend-package-handoff.md",
+    "releaseNotesTemplate": "docs/friend-release-notes-template.md",
+    "knownIssues": "docs/friend-known-issues.md",
+    "platformValidation": "docs/friend-platform-validation.md",
+    "platformValidationHandoff": "docs/friend-platform-validation-handoff.md"
+  },
+  "release": {
+    "updateChannels": [
+      {
+        "label": "Master",
+        "source": "Mama Zaraa optimization lane",
+        "guardrail": "Can move quickly, but must not auto-ship to friends."
+      },
+      {
+        "label": "Beta",
+        "source": "Promoted master snapshot",
+        "guardrail": "Requires build, preflight, package, package verification, and browser smoke evidence."
+      },
+      {
+        "label": "Friends",
+        "source": "Validated beta package",
+        "guardrail": "Requires installer proof, rollback notes, and support guidance before sharing."
+      },
+      {
+        "label": "Stable",
+        "source": "Repeatedly validated friends releases",
+        "guardrail": "Comes later, after normal use proves recovery and update behavior."
+      }
+    ],
+    "promotionChecklist": [
+      "Run pnpm --filter @zaraa/web build.",
+      "Run pnpm ship:ready.",
+      "Run pnpm ship:package.",
+      "Run pnpm ship:verify-package.",
+      "Browser-smoke Ship Readiness, Cockpit, Dashboard, and Brain Map.",
+      "Validate macOS install in a clean temporary folder.",
+      "Validate Windows install path on a real machine or VM.",
+      "Validate Linux install path on a real machine or VM.",
+      "Attach release notes, known issues, rollback notes, and support template."
+    ],
+    "runbookLinks": [
+      {
+        "label": "Install guide",
+        "path": "docs/friend-harness-install-guide.md"
+      },
+      {
+        "label": "Handoff README",
+        "path": "docs/friend-package-handoff.md"
+      },
+      {
+        "label": "Release notes template",
+        "path": "docs/friend-release-notes-template.md"
+      },
+      {
+        "label": "Known issues",
+        "path": "docs/friend-known-issues.md"
+      },
+      {
+        "label": "Platform validation",
+        "path": "docs/friend-platform-validation.md"
+      },
+      {
+        "label": "Platform validation handoff",
+        "path": "docs/friend-platform-validation-handoff.md"
+      }
+    ],
+    "finalHumanChecklist": [
+      "Package metadata matches the archives being shared.",
+      "Package docs are inside the staged folder and archives.",
+      "Hashes have been checked after archive creation.",
+      "No local keys, configs, logs, memories, or private files are included.",
+      "At least one clean-folder install has been validated before friend sharing.",
+      "Rollback and support instructions are included with the package."
+    ],
+    "knownIssues": [
+      "Windows installer validation is untested.",
+      "Linux installer validation is blocked."
+    ],
+    "releaseNotesTemplate": "docs/friend-release-notes-template.md"
+  },
+  "validation": {
+    "report": "dist/friend-package/validation-report.json",
+    "status": "blocked",
+    "safeToShare": false,
+    "lastVerifiedAt": "2026-08-17T01:59:25.568Z",
+    "blockers": [
+      "Release source identity: Release source Git check failed: fatal: not a git repository (or any of the parent directories): .git",
+      "Windows validation is untested.",
+      "Linux validation is blocked."
+    ],
+    "warnings": [
+      "Release manifest: Current release manifest was not found while verifying the package.",
+      "Source package version: Root package.json was not found while verifying the package."
+    ]
+  },
+  "betaBundle": {
+    "directory": "zaraa-friend-beta-2026.07.24-rc.6",
+    "archive": {
+      "file": "zaraa-friend-beta-2026.07.24-rc.6.zip",
+      "bytes": 11060243,
+      "sha256": "b6e48af1c34be4fe0b1aa90577cf9dc777f78855abbc5e04badb36fb7231357d"
+    },
+    "sha256File": "zaraa-friend-beta-2026.07.24-rc.6.zip.sha256",
+    "handoff": "platform-validation-handoff-2026.07.24-rc.6.md",
+    "sendNote": "zaraa-friend-beta-2026.07.24-rc.6/SEND_TO_FRIEND.md",
+    "generatedAt": "2026-08-16T22:45:05.226Z",
+    "auditCommand": "pnpm ship:audit-friend-bundle"
+  }
+}

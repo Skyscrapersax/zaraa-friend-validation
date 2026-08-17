@@ -1,0 +1,83 @@
+{
+  "name": "zaraa",
+  "private": true,
+  "version": "2026.07.24-rc.6",
+  "type": "module",
+  "packageManager": "pnpm@9.15.4",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaraa-ai/zaraa.git"
+  },
+  "homepage": "https://github.com/zaraa-ai/zaraa#readme",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "turbo build --force",
+    "start": "node scripts/zaraa-daemon.mjs",
+    "dev:gateway": "node scripts/zaraa-daemon.mjs",
+    "setup": "node packages/cli/dist/zaraa.js setup",
+    "doctor": "node packages/cli/dist/zaraa.js doctor",
+    "truth": "node packages/cli/dist/zaraacoder.js truth",
+    "proof:24h": "node scripts/zaraa-24h-proof.mjs --watch --print",
+    "ship:preflight": "node scripts/friend-build-preflight.mjs",
+    "postinstall": "node -e \"const fs=require('fs'),p='node_modules/playwright';if(fs.existsSync(p)){const pkg=JSON.parse(fs.readFileSync(p+'/package.json','utf8'));if(!pkg.main){pkg.main='index.js';fs.writeFileSync(p+'/package.json',JSON.stringify(pkg));fs.writeFileSync(p+'/index.js','module.exports={};')}}\""
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.14",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.6.0",
+    "@types/picomatch": "^4.0.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/coverage-v8": "4.1.5",
+    "ajv": "^8.20.0",
+    "ajv-formats": "3",
+    "picomatch": "^4.0.3",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "turbo": "^2.9.14",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "4.1.5"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.1",
+    "better-sqlite3": "12.6.2",
+    "hono": "^4.12.16",
+    "ink": "^6.8.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zustand": "^5.0.13"
+  },
+  "pnpm": {
+    "overrides": {
+      "undici": ">=7.29.0 <8",
+      "dompurify": "3.4.13",
+      "esbuild": "0.28.1",
+      "hono": ">=4.12.34",
+      "@hono/node-server": ">=2.0.10",
+      "fast-uri": "^3.1.2",
+      "qs": "^6.15.2",
+      "form-data": "^4.0.6",
+      "axios": "^1.18.0",
+      "brace-expansion@1": "^1.1.18",
+      "postcss": "^8.5.18",
+      "ip-address@10": "^10.3.1",
+      "nanoid@3": "^3.3.17",
+      "path-to-regexp": "8.4.0",
+      "picomatch": "4.0.4",
+      "tar": "^7.5.21",
+      "body-parser": ">=2.3.0",
+      "jayson>ws": "7.5.11",
+      "osc>ws": "8.21.0",
+      "viem>ws": "8.21.0",
+      "jayson>uuid": "14.0.0",
+      "rpc-websockets>uuid": "14.0.0",
+      "http-proxy-agent>@tootallnate/once": "3.0.1"
+    }
+  }
+}

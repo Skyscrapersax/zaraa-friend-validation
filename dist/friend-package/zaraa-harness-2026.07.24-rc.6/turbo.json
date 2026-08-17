@@ -1,0 +1,17 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"globalEnv": ["RUSTUP_TOOLCHAIN"],
+	"globalPassThroughEnv": [
+		"CARGO_HOME",
+		"CARGO_NET_OFFLINE",
+		"RUSTUP_HOME",
+		"RUSTUP_SKIP_UPDATE_CHECK"
+	],
+	"tasks": {
+		"build": { "dependsOn": ["^build"], "outputs": ["dist/**", "*.node", "native/**/*.node"] },
+		"dev": { "cache": false, "persistent": true },
+		"test": { "dependsOn": ["build"] },
+		"test:coverage": { "dependsOn": ["build"], "outputs": ["coverage/**"] },
+		"lint": {}
+	}
+}

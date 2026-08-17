@@ -1,0 +1,1 @@
+function i(t){return t==null||!Number.isFinite(t)?"—":t>=1e6?`${(t/1e6).toFixed(1)}M`:t>=1e3?`${(t/1e3).toFixed(1)}K`:`${t}`}function r(t){const n=i(t),e=n.match(/[MK]$/)?.[0];return e?{value:n.slice(0,-1),unit:e}:{value:n}}export{i as f,r as s};

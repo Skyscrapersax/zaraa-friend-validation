@@ -1,0 +1,37 @@
+{
+	"name": "@zaraa/shared",
+	"version": "0.0.1",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zaraa-ai/zaraa.git",
+		"directory": "packages/shared"
+	},
+	"homepage": "https://github.com/zaraa-ai/zaraa#readme",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./designer-artifacts": {
+			"types": "./src/designer-artifacts.ts",
+			"import": "./dist/designer-artifacts.js",
+			"default": "./dist/designer-artifacts.js"
+		}
+	},
+	"scripts": {
+		"build": "tsup",
+		"typecheck": "tsc --noEmit",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"devDependencies": {
+		"tsup": "^8.5.1",
+		"vitest": "^4.1.5"
+	}
+}

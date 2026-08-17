@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Zaraa Operator</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0c0906" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="preload" href="/fonts/syne-800.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/plex-mono-600.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    /* Pre-hydration shell only. MUST stay inside @layer base — an unlayered
+       rule here outranks every Tailwind utility and silently kills them
+       app-wide (that exact bug shipped for months via `* { padding: 0 }`). */
+    @layer base {
+      :root { color-scheme: dark; }
+      body {
+        font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+        background: #0c0906;
+        color: #f0e7d8;
+      }
+    }
+    /* Boot-splash glow pulse. @keyframes carry no selector/specificity, so this
+       cannot outrank Tailwind utilities (unlike the layer-bound rules above). */
+    @keyframes zaraaBoot {
+      0%, 100% { opacity: .5; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

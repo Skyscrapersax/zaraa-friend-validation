@@ -1,0 +1,1 @@
+import{Z as s}from"./react-vendor-BELSBECJ.js";function i({children:n,hint:e}){return s.jsxs("div",{className:"ui-sectionlabel",children:[s.jsx("span",{children:n}),e?s.jsx("span",{className:"ui-sectionlabel__hint",children:e}):null]})}export{i as S};

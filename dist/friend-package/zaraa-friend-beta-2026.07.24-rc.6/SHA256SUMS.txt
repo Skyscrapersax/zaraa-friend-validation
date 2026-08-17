@@ -1,0 +1,2 @@
+1e5e969d21f55bef257c35abe8bd34271745893c9d8e33f172f3890c77eb1c52  archives/zaraa-harness-2026.07.24-rc.6.tar.gz
+3eeabe5d128eea0dc7151223326a598225086cedeaff184f7745c9d7fb7d3215  archives/zaraa-harness-2026.07.24-rc.6.zip

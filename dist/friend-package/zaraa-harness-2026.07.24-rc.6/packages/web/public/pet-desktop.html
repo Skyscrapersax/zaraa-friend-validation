@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Baby Bleepy · Desktop</title>
+	<style>
+		:root {
+			--bleepy-mint: #53f3c7;
+			--bleepy-lime: #d5ff67;
+			--bleepy-ink: #13201d;
+			--bleepy-cream: #fff7e3;
+		}
+		* { box-sizing: border-box; }
+		html, body {
+			margin: 0;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			font-family: "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+			color: var(--bleepy-ink);
+			background: transparent;
+			user-select: none;
+		}
+		body {
+			display: grid;
+			place-items: center;
+			background:
+				radial-gradient(circle at 30% 20%, rgba(83, 243, 199, 0.35), transparent 55%),
+				linear-gradient(160deg, rgba(255, 247, 227, 0.96), rgba(221, 232, 255, 0.94));
+		}
+		.shell {
+			width: min(220px, 100vw - 12px);
+			padding: 14px 12px 12px;
+			border: 3px solid var(--bleepy-ink);
+			border-radius: 22px;
+			background: rgba(255, 247, 227, 0.88);
+			box-shadow: 6px 6px 0 rgba(19, 32, 29, 0.16);
+			text-align: center;
+		}
+		.name {
+			font-size: 0.72rem;
+			font-weight: 900;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+		}
+		.species {
+			margin-top: 2px;
+			font-size: 0.68rem;
+			opacity: 0.7;
+		}
+		.stage {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			margin: 12px 0 10px;
+			min-height: 120px;
+			justify-content: center;
+		}
+		.bubble {
+			padding: 0.28rem 0.55rem;
+			border: 2px solid var(--bleepy-ink);
+			border-radius: 999px;
+			background: var(--bleepy-cream);
+			font-size: 0.72rem;
+			font-weight: 800;
+			box-shadow: 3px 3px 0 rgba(19, 32, 29, 0.14);
+			animation: bubble 2.2s ease-in-out infinite;
+		}
+		.figure {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 4.6rem;
+			height: 4.9rem;
+			filter: drop-shadow(0 8px 14px rgba(8, 40, 32, 0.28));
+			animation: bob 2.4s ease-in-out infinite;
+		}
+		.antenna {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			height: 1.15rem;
+		}
+		.stem {
+			width: 3px;
+			height: 0.55rem;
+			background: var(--bleepy-lime);
+			border-radius: 2px;
+		}
+		.bulb {
+			width: 0.78rem;
+			height: 0.78rem;
+			border-radius: 999px;
+			background: var(--bleepy-lime);
+			box-shadow: 0 0 12px color-mix(in srgb, var(--bleepy-lime) 70%, transparent);
+			animation: bulb 1.6s ease-in-out infinite;
+		}
+		.body {
+			position: relative;
+			width: 3.6rem;
+			height: 3rem;
+			border: 3px solid var(--bleepy-cream);
+			border-radius: 1.1rem;
+			background: var(--bleepy-mint);
+		}
+		.eye {
+			position: absolute;
+			top: 0.78rem;
+			width: 0.46rem;
+			height: 0.52rem;
+			border-radius: 999px;
+			background: var(--bleepy-ink);
+		}
+		.eye.l { left: 0.68rem; }
+		.eye.r { right: 0.68rem; }
+		.mouth {
+			position: absolute;
+			left: 50%;
+			bottom: 0.55rem;
+			width: 0.9rem;
+			height: 0.42rem;
+			margin-left: -0.45rem;
+			border: 2.5px solid var(--bleepy-ink);
+			border-top: 0;
+			border-radius: 0 0 999px 999px;
+		}
+		.meta {
+			font-size: 0.7rem;
+			line-height: 1.35;
+			opacity: 0.78;
+			min-height: 2.4em;
+		}
+		.bar {
+			display: flex;
+			gap: 6px;
+			justify-content: center;
+			margin-top: 10px;
+		}
+		button {
+			border: 2px solid var(--bleepy-ink);
+			border-radius: 999px;
+			background: white;
+			padding: 4px 10px;
+			font: inherit;
+			font-size: 0.68rem;
+			font-weight: 800;
+			cursor: pointer;
+			box-shadow: 2px 2px 0 rgba(19, 32, 29, 0.12);
+		}
+		button:hover { background: var(--bleepy-lime); }
+
+		.shell[data-mood="working"] .figure { animation: work 0.5s ease-in-out infinite; }
+		.shell[data-mood="working"] .bulb { animation: bulb-fast 0.4s ease-in-out infinite; }
+		.shell[data-mood="waiting"] .figure { animation: wait 1s ease-in-out infinite; }
+		.shell[data-mood="waiting"] .mouth {
+			width: 0.55rem; height: 0.55rem; margin-left: -0.28rem;
+			border: 0; border-radius: 999px; background: var(--bleepy-ink);
+		}
+		.shell[data-mood="waiting"] .bubble { background: #ffd9a3; }
+		.shell[data-mood="error"] .figure { animation: err 0.32s ease-in-out infinite; }
+		.shell[data-mood="error"] .body { background: #ff8f84; }
+		.shell[data-mood="error"] .mouth { transform: scaleY(-1); bottom: 0.42rem; }
+		.shell[data-mood="error"] .bulb { background: #ff6f61; }
+
+		@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+		@keyframes work { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
+		@keyframes wait { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+		@keyframes err { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-2px)} 75%{transform:translateX(2px)} }
+		@keyframes bulb { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+		@keyframes bulb-fast { 0%,100%{transform:scale(.9)} 50%{transform:scale(1.25)} }
+		@keyframes bubble { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
+
+		@media (prefers-reduced-motion: reduce) {
+			.figure, .bulb, .bubble { animation: none !important; }
+		}
+	</style>
+</head>
+<body>
+	<div class="shell" id="shell" data-mood="ready">
+		<div class="name" id="name">Baby Bleepy</div>
+		<div class="species" id="species">signal sweep hatchling</div>
+		<div class="stage">
+			<div class="bubble" id="bleep">bleep?</div>
+			<div class="figure" aria-hidden="true">
+				<div class="antenna"><div class="stem"></div><div class="bulb"></div></div>
+				<div class="body">
+					<div class="eye l"></div>
+					<div class="eye r"></div>
+					<div class="mouth"></div>
+				</div>
+			</div>
+		</div>
+		<div class="meta" id="meta">Connecting to Zaraa…</div>
+		<div class="bar">
+			<button type="button" id="refreshBtn">Refresh</button>
+			<button type="button" id="dashBtn">Dashboard</button>
+		</div>
+	</div>
+	<script>
+		const COPY = {
+			ready: { label: "Ready", bleep: "bleep?", detail: "Idle and watching Zaraa." },
+			working: { label: "Working", bleep: "bleep bleep!", detail: "Tasks running or queued." },
+			waiting: { label: "Waiting", bleep: "need you!", detail: "Approval needs you." },
+			error: { label: "Uh-oh", bleep: "bleep…", detail: "Gateway/circuit trouble." },
+		};
+		const HATCH_KEY = "zaraa.pet.hatch";
+		const GATEWAY = "http://127.0.0.1:3927";
+		const DASH = location.origin.includes("392") ? location.origin : "http://127.0.0.1:3929";
+
+		function readHatch() {
+			try {
+				const raw = localStorage.getItem(HATCH_KEY);
+				if (!raw) return null;
+				return JSON.parse(raw);
+			} catch { return null; }
+		}
+
+		function applyHatch(h) {
+			if (!h) return;
+			if (h.bodyColor) document.documentElement.style.setProperty("--bleepy-mint", h.bodyColor);
+			if (h.antennaColor) document.documentElement.style.setProperty("--bleepy-lime", h.antennaColor);
+			if (h.name) document.getElementById("name").textContent = h.name;
+			if (h.species) document.getElementById("species").textContent = h.species;
+		}
+
+		function deriveMood({ status, running, pending, approvals, tripped }) {
+			if (tripped || status === "error" || status === "degraded") return "error";
+			if (approvals > 0) return "waiting";
+			if (running > 0 || pending > 0) return "working";
+			return "ready";
+		}
+
+		function setMood(mood, detail) {
+			const c = COPY[mood] || COPY.ready;
+			document.getElementById("shell").dataset.mood = mood;
+			document.getElementById("bleep").textContent = c.bleep;
+			document.getElementById("meta").textContent = `${c.label} · ${detail || c.detail}`;
+			document.title = `${c.bleep} · ${document.getElementById("name").textContent}`;
+		}
+
+		async function poll() {
+			applyHatch(readHatch());
+			try {
+				const healthRes = await fetch(`${GATEWAY}/api/health`, { cache: "no-store" });
+				const health = healthRes.ok ? await healthRes.json() : {};
+				let approvals = 0;
+				let tripped = false;
+				try {
+					// Best-effort; may 401 without key — desktop still works on public health.
+					const aRes = await fetch(`${GATEWAY}/api/approvals`, { cache: "no-store" });
+					if (aRes.ok) {
+						const a = await aRes.json();
+						approvals = Array.isArray(a.approvals) ? a.approvals.length : 0;
+					}
+				} catch {}
+				try {
+					const cRes = await fetch(`${GATEWAY}/api/circuit-breaker`, { cache: "no-store" });
+					if (cRes.ok) {
+						const c = await cRes.json();
+						tripped = Boolean(c.tripped);
+					}
+				} catch {}
+
+				const running = Number(health.taskQueue?.running ?? 0);
+				const pending = Number(health.taskQueue?.pending ?? 0);
+				const mood = deriveMood({
+					status: health.status,
+					running,
+					pending,
+					approvals,
+					tripped,
+				});
+				const detail =
+					mood === "working"
+						? `${running} running · ${pending} pending`
+						: mood === "waiting"
+							? `${approvals} approval${approvals === 1 ? "" : "s"}`
+							: mood === "error"
+								? (tripped ? "circuit breaker tripped" : `status ${health.status || "down"}`)
+								: `uptime ${Math.round(Number(health.uptime || 0))}s`;
+				setMood(mood, detail);
+			} catch (err) {
+				setMood("error", "can't reach gateway :3927");
+			}
+		}
+
+		document.getElementById("refreshBtn").onclick = () => void poll();
+		document.getElementById("dashBtn").onclick = () => {
+			window.open(DASH, "_blank", "noopener,noreferrer");
+		};
+
+		applyHatch(readHatch());
+		poll();
+		setInterval(poll, 2500);
+
+		// Drag-friendly for app windows: hold title-ish area
+		let drag = null;
+		document.querySelector(".shell").addEventListener("pointerdown", (e) => {
+			if (e.target.closest("button")) return;
+			// Browser can't move its own window from page JS without chrome flags;
+			// keep for future electron/webview hosts.
+		});
+	</script>
+</body>
+</html>

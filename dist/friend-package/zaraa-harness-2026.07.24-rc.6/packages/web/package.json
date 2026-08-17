@@ -1,0 +1,56 @@
+{
+	"name": "@zaraa/web",
+	"version": "0.0.1",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zaraa-ai/zaraa.git",
+		"directory": "packages/web"
+	},
+	"homepage": "https://github.com/zaraa-ai/zaraa#readme",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dataless:guard": "node ../../scripts/check-dataless-files.mjs . \"@zaraa/web build/test\"",
+		"predev": "pnpm run dataless:guard",
+		"dev": "vite",
+		"prebuild": "pnpm run dataless:guard",
+		"build": "vite build",
+		"typecheck": "tsc --noEmit",
+		"preview": "vite preview",
+		"pretest": "pnpm run dataless:guard",
+		"test": "vitest run --passWithNoTests",
+		"pretest:coverage": "pnpm run dataless:guard",
+		"test:coverage": "vitest run --coverage --passWithNoTests"
+	},
+	"dependencies": {
+		"@number-flow/react": "^0.6.0",
+		"@tailwindcss/vite": "^4.2.1",
+		"@zaraa/shared": "workspace:*",
+		"dompurify": "^3.4.9",
+		"lightweight-charts": "^5.2.0",
+		"lucide-react": "^0.577.0",
+		"marked": "^18.0.3",
+		"motion": "^12.40.0",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
+		"recharts": "^3.8.1",
+		"sonner": "^2.0.7",
+		"tailwindcss": "^4.2.1",
+		"zustand": "^5.0.13"
+	},
+	"devDependencies": {
+		"@testing-library/dom": "^10.4.1",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.2",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-basic-ssl": "^2.1.4",
+		"@vitejs/plugin-react": "^5.1.4",
+		"daisyui": "^5.5.19",
+		"jsdom": "^29.1.1",
+		"tsup": "^8.5.1",
+		"vite": "^7.3.5",
+		"vitest": "^4.1.5"
+	}
+}

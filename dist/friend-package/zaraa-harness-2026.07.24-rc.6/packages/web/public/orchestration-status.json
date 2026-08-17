@@ -1,0 +1,56 @@
+{
+  "generatedAt": "2026-07-28T05:06:58Z",
+  "objective": "Finish Zara as a one-stop daily assistant and restore coordinated work after restart.",
+  "lanes": [
+    {
+      "id": "codex",
+      "agent": "Codex",
+      "state": "complete",
+      "task": "Integrate orchestration visualizer, canonical voice briefs, and safe canonical-checkout rollout.",
+      "lastResult": "Autonomy kernel closure restored; three lifecycle regressions fixed; canonical core/web builds and typechecks pass; 756 focused tests pass; daemon and validation cutover verified.",
+      "blocker": null,
+      "links": [
+        {
+          "label": "Task queue",
+          "href": "/#tentacles"
+        },
+        {
+          "label": "Zaraacode",
+          "href": "/#zaraacode"
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "agent": "Claude / Fable",
+      "state": "complete",
+      "task": "Review product and operations fit for cross-runtime orchestration visibility.",
+      "lastResult": "Confirmed Tentacles is strong for Zaraa tasks but cannot see ad-hoc Codex, Claude, or Grok agents.",
+      "blocker": null,
+      "links": []
+    },
+    {
+      "id": "grok",
+      "agent": "Grok",
+      "state": "complete",
+      "task": "Audit runtime data sources and smallest safe visualizer implementation.",
+      "lastResult": "Confirmed no cross-runtime registry exists; coordinator-owned sanitized snapshot is smallest honest view.",
+      "blocker": null,
+      "links": []
+    },
+    {
+      "id": "zaraa",
+      "agent": "Zaraa",
+      "state": "running",
+      "task": "Serve local assistant, task queue, web dashboard, and memory tools.",
+      "lastResult": "Web, daemon, and validation run from this repo; ports 3927, 3928, and 3929 report healthy.",
+      "blocker": null,
+      "links": [
+        {
+          "label": "System status",
+          "href": "/#status"
+        }
+      ]
+    }
+  ]
+}

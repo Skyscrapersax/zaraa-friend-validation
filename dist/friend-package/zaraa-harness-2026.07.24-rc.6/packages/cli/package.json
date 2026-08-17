@@ -1,0 +1,47 @@
+{
+  "name": "@zaraa/cli",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaraa-ai/zaraa.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/zaraa-ai/zaraa#readme",
+  "type": "module",
+  "main": "./dist/zaraa.js",
+  "types": "./bin/zaraa.ts",
+  "bin": {
+    "zaraa": "./dist/zaraa.js",
+    "zaraacoder": "./dist/zaraacoder.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "dataless:guard": "node ../../scripts/check-dataless-files.mjs . \"@zaraa/cli build/test\"",
+    "prebuild": "pnpm run dataless:guard",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "predev": "pnpm run dataless:guard",
+    "dev": "tsup --watch",
+    "pretest": "pnpm run dataless:guard",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@types/react": "^19.2.14",
+    "@zaraa/core": "workspace:*",
+    "@zaraa/shared": "workspace:*",
+    "dotenv": "^17.3.1",
+    "ink": "^6.8.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^19.2.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "vitest": "^4.1.5"
+  }
+}

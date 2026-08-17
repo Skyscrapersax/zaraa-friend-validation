@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "name": "Zaraa Harness Friend Release",
+  "version": "2026.07.24-rc.6",
+  "channel": "friends",
+  "generatedAt": "2026-08-16T22:45:04.290Z",
+  "source": {
+    "vcs": "git",
+    "revision": "712573417878de150a598e58195f6784cfc113e6",
+    "clean": true
+  },
+  "package": {
+    "directory": "zaraa-harness-2026.07.24-rc.6",
+    "archives": []
+  },
+  "installers": {
+    "macLinux": "installers/install-macos-linux.sh",
+    "windows": "installers/install-windows.ps1",
+    "startMacLinux": "installers/start-macos-linux.sh",
+    "startWindows": "installers/start-windows.ps1"
+  },
+  "manifest": {
+    "file": "dist/release/zaraa-friend-release-manifest.json",
+    "artifacts": 65,
+    "generatedAt": "2026-08-16T22:45:03.817Z"
+  },
+  "docs": {
+    "installGuide": "docs/friend-harness-install-guide.md",
+    "handoffReadme": "docs/friend-package-handoff.md",
+    "releaseNotesTemplate": "docs/friend-release-notes-template.md",
+    "knownIssues": "docs/friend-known-issues.md",
+    "platformValidation": "docs/friend-platform-validation.md",
+    "platformValidationHandoff": "docs/friend-platform-validation-handoff.md"
+  },
+  "release": {
+    "updateChannels": [
+      {
+        "label": "Master",
+        "guardrail": "Fast local optimization lane; do not auto-ship to friends."
+      },
+      {
+        "label": "Beta",
+        "guardrail": "Requires build, preflight, package, verification, and browser smoke evidence."
+      },
+      {
+        "label": "Friends",
+        "guardrail": "Requires installer proof, rollback notes, and support guidance."
+      },
+      {
+        "label": "Stable",
+        "guardrail": "Future channel after friend packages survive normal use."
+      }
+    ],
+    "promotionChecklist": [
+      "Run pnpm ship:ready for release-bound runtime proof.",
+      "Run pnpm ship:candidate; this invalidates older platform evidence.",
+      "Browser-smoke Ship Readiness, Cockpit, Dashboard, and Brain Map.",
+      "Validate macOS, Windows, and Linux install paths before broad sharing.",
+      "Run pnpm ship:promote:ready -- --runtime-root <installed-root> --gateway-url <candidate-url> --confirm-browser-smoke as the final share gate."
+    ],
+    "knownIssues": [
+      "Installer validation is still pending on macOS, Windows, and Linux."
+    ]
+  },
+  "validation": {
+    "status": "watch",
+    "safeToShare": false,
+    "lastVerifiedAt": "2026-08-16T22:45:04.290Z",
+    "blockers": [
+      "Archive hashes and platform promotion evidence are maintained by the package sender, outside this immutable installed kit."
+    ],
+    "warnings": []
+  }
+}

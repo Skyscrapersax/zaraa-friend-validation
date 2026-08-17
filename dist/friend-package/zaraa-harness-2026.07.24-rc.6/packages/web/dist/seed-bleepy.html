@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seeding bleepythings...</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 2rem; }
+    pre { background: #1a1a1a; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.8rem; max-height: 70vh; }
+    .ok { color: #4ade80; }
+  </style>
+</head>
+<body>
+  <h2>bleepythings seed</h2>
+  <p id="status">Writing to localStorage...</p>
+  <pre id="json"></pre>
+  <script>
+    // ── helpers ──
+    const uid = () => Math.random().toString(36).slice(2, 10);
+
+    const DAYS = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+    const defaultAvailability = () =>
+      Object.fromEntries(DAYS.map(d => [d, { morning: "gray", afternoon: "gray", evening: "gray" }]));
+
+    // ── members ──
+    const members = [
+      {
+        id: uid(),
+        name: "You",
+        instrument: "guitar/vocals",
+        role: "core",
+        status: "confirmed",
+        phone: "",
+        email: "",
+        availability: defaultAvailability(),
+        notes: ""
+      },
+      {
+        id: uid(),
+        name: "Jake",
+        instrument: "bass",
+        role: "core",
+        status: "pending",
+        phone: "",
+        email: "",
+        availability: defaultAvailability(),
+        notes: "~80% chance he's in, needs to call"
+      },
+      {
+        id: uid(),
+        name: "TBD (Drummer)",
+        instrument: "drums",
+        role: "core",
+        status: "pending",
+        phone: "",
+        email: "",
+        availability: defaultAvailability(),
+        notes: "Need to find / confirm drummer"
+      },
+      {
+        id: uid(),
+        name: "TBD (Keys)",
+        instrument: "keys/synth",
+        role: "core",
+        status: "pending",
+        phone: "",
+        email: "",
+        availability: defaultAvailability(),
+        notes: "Need to find / confirm keys player"
+      },
+      {
+        id: uid(),
+        name: "TBD (Backup Bass)",
+        instrument: "bass",
+        role: "backup",
+        status: "pending",
+        phone: "",
+        email: "",
+        availability: defaultAvailability(),
+        notes: "Backup bassist in case Jake can't do it"
+      }
+    ];
+
+    // ── songs ──
+    const songs = [
+      {
+        id: uid(),
+        title: "Frequency Ghost",
+        status: "rehearsed",
+        durationSec: 270,
+        bpm: 0,
+        key: "",
+        notes: "High energy opener candidate",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Warm Static",
+        status: "rehearsed",
+        durationSec: 300,
+        bpm: 0,
+        key: "",
+        notes: "Ambient middle section, needs tight outro",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Circuit Prayer",
+        status: "rehearsed",
+        durationSec: 240,
+        bpm: 0,
+        key: "",
+        notes: "",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Neon Moss",
+        status: "rehearsed",
+        durationSec: 315,
+        bpm: 0,
+        key: "",
+        notes: "Check intonation on bridge guitar",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Dissolve",
+        status: "rehearsed",
+        durationSec: 360,
+        bpm: 0,
+        key: "",
+        notes: "Possible closer, only if time allows",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Chest Frequency",
+        status: "recording",
+        durationSec: 285,
+        bpm: 0,
+        key: "",
+        notes: "NEW \u2014 tracked drums/bass/guitar, needs vocals + synth, working title approved",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Track 02 (untitled)",
+        status: "writing",
+        durationSec: 240,
+        bpm: 0,
+        key: "",
+        notes: "NEW \u2014 needs arrangement",
+        lyrics: ""
+      },
+      {
+        id: uid(),
+        title: "Missed Call",
+        status: "writing",
+        durationSec: 0,
+        bpm: 0,
+        key: "",
+        notes: "NEW idea \u2014 phone ring deconstructing into glitchy beat",
+        lyrics: ""
+      }
+    ];
+
+    // ── 8-week roadmap (default from store) ──
+    const roadmap = [
+      {
+        week: 1,
+        label: "Lock It Down",
+        startDate: "2026-03-18",
+        goals: [
+          "Confirm all band members for the show",
+          "Inventory existing setlist \u2014 pick songs for 40 min",
+          "Identify 2-3 new songs to finish",
+          "Set up weekly practice schedule",
+          "Dave intro meeting \u2014 align on content vision",
+          "Get bleepythings.com domain + deploy website v1"
+        ],
+        completed: [false, false, false, false, false, false]
+      },
+      {
+        week: 2,
+        label: "Arrangements & Rehearsals",
+        startDate: "2026-03-25",
+        goals: [
+          "Finalize arrangements for new song 1",
+          "Finalize arrangements for new song 2",
+          "First full-band rehearsal of setlist",
+          "Social: first teaser post (rehearsal clip / behind-the-scenes)",
+          "Draft recording schedule with Dave",
+          "Update website with member bios + streaming links"
+        ],
+        completed: [false, false, false, false, false, false]
+      },
+      {
+        week: 3,
+        label: "Deep Rehearsal",
+        startDate: "2026-04-01",
+        goals: [
+          "2 full rehearsals minimum",
+          "Arrange new song 3 (if doing 3)",
+          "Nail transitions between songs in set order",
+          "Social: short band intro video with Dave",
+          "Begin pre-production for recording"
+        ],
+        completed: [false, false, false, false, false]
+      },
+      {
+        week: 4,
+        label: "Recording Sprint",
+        startDate: "2026-04-08",
+        goals: [
+          "Record new song 1 \u2014 tracking",
+          "Record new song 2 \u2014 tracking",
+          "Continue rehearsals for live set",
+          "Social: studio session clips / stories",
+          "Dave films recording day content"
+        ],
+        completed: [false, false, false, false, false]
+      },
+      {
+        week: 5,
+        label: "Mix & Polish",
+        startDate: "2026-04-15",
+        goals: [
+          "Mix new song 1",
+          "Mix new song 2",
+          "Record song 3 if applicable",
+          "2 rehearsals \u2014 run full set start to finish",
+          "Social: announce Millvale appearance + song teaser"
+        ],
+        completed: [false, false, false, false, false]
+      },
+      {
+        week: 6,
+        label: "Master & Release Prep",
+        startDate: "2026-04-22",
+        goals: [
+          "Master all new tracks",
+          "Upload to distribution (DistroKid/etc)",
+          "Rehearsal \u2014 performance energy run-throughs",
+          "Social: release countdown, song snippets",
+          "Dave: film promo video for festival"
+        ],
+        completed: [false, false, false, false, false]
+      },
+      {
+        week: 7,
+        label: "Release & Promote",
+        startDate: "2026-04-29",
+        goals: [
+          "Release new songs on streaming platforms",
+          "Social media push \u2014 release day campaign",
+          "Rehearsal with full stage energy",
+          "Coordinate with festival for tech requirements",
+          "Dave: release day content + reactions"
+        ],
+        completed: [false, false, false, false, false]
+      },
+      {
+        week: 8,
+        label: "Show Week",
+        startDate: "2026-05-06",
+        goals: [
+          "Final dress rehearsal",
+          "Gear check & pack list",
+          "Rest + mental prep",
+          "Millvale Music Festival SHOW DAY",
+          "Dave: film the full performance + crowd moments"
+        ],
+        completed: [false, false, false, false, false]
+      }
+    ];
+
+    // ── social content calendar (27 posts, 8 weeks) ──
+    const socialPosts = [
+      { id: uid(), platform: "instagram", content: "Photo dump: first practice back together. Messy cables, half-tuned instruments, coffee on the amp.", scheduledDate: "2026-03-19", status: "idea", notes: "Caption: we're back in a room together and nothing works yet. stay tuned or don't." },
+      { id: uid(), platform: "tiktok", content: "15-sec clip: someone plays a riff badly, then nails it. Phone propped on stand.", scheduledDate: "2026-03-21", status: "idea", notes: "Caption: the before and 45 minutes later. we have a show in 8 weeks. this is fine." },
+      { id: uid(), platform: "instagram", content: "Story: screenshot of group chat confirming the setlist. Keep the funny parts.", scheduledDate: "2026-03-22", status: "idea", notes: "Text overlay: picking songs is violence" },
+      { id: uid(), platform: "instagram", content: "Reel: 30-sec rehearsal clip. Dave films handheld across the room, raw audio.", scheduledDate: "2026-03-25", status: "idea", notes: "Caption: week 2. sounds are starting to sound like sounds." },
+      { id: uid(), platform: "tiktok", content: "Quick video: pan around the practice space. Weird wall stuff, cables, snacks.", scheduledDate: "2026-03-27", status: "idea", notes: "Caption: welcome to the bleepy laboratory. no we will not be cleaning up." },
+      { id: uid(), platform: "instagram", content: "Story series: each member holds up instrument, says one sentence. Phone passed around.", scheduledDate: "2026-03-29", status: "idea", notes: "Last slide: 8 weeks to festival. we got this. probably." },
+      { id: uid(), platform: "tiktok", content: "Dave films a transition that falls apart + the retry that nails it.", scheduledDate: "2026-04-01", status: "idea", notes: "Caption: transitions are just group trust falls with instruments" },
+      { id: uid(), platform: "instagram", content: "Reel: Band intro video. Each member 5 seconds. Name, instrument, one weird fact.", scheduledDate: "2026-04-03", status: "idea", notes: "Caption: we are bleepythings. we make noises on purpose (usually). PIN TO PROFILE." },
+      { id: uid(), platform: "youtube", content: "YouTube Short: 60-sec rehearsal montage. Dave cuts snippets from last 2 weeks.", scheduledDate: "2026-04-05", status: "idea", notes: "Title: bleepythings — rehearsal tape vol. 1" },
+      { id: uid(), platform: "instagram", content: "Photo carousel: studio day. Mics, headphones, chord chart, mixing board.", scheduledDate: "2026-04-08", status: "idea", notes: "Caption: recording day 1. we pressed the red button. things are happening." },
+      { id: uid(), platform: "tiktok", content: "Behind the glass: 15-sec clip of someone tracking. Film through studio window.", scheduledDate: "2026-04-10", status: "idea", notes: "Text overlay: take 7 (the good one)" },
+      { id: uid(), platform: "instagram", content: "Story: Dave's raw footage from recording day. Quick clips, funny moments.", scheduledDate: "2026-04-12", status: "idea", notes: "Text overlays: Dave caught us being serious for once / this one might actually be good?" },
+      { id: uid(), platform: "instagram", content: "Reel: 15-sec teaser of new song 1. Just the hook. Waveform or studio clip. Fade out abruptly.", scheduledDate: "2026-04-15", status: "idea", notes: "Caption: this one's called [SONG TITLE]. coming soon to a streaming platform near you." },
+      { id: uid(), platform: "tiktok", content: "Festival announcement: text on screen over rehearsal clip. Notes app screenshot + 10-sec clip.", scheduledDate: "2026-04-17", status: "idea", notes: "Text: BLEEPYTHINGS @ MILLVALE MUSIC FESTIVAL 2026 — may 13" },
+      { id: uid(), platform: "youtube", content: "YouTube Short: 30-sec new song 2 snippet over studio footage. Dave edits or single wide shot.", scheduledDate: "2026-04-19", status: "idea", notes: "Title: new song preview — [SONG TITLE]" },
+      { id: uid(), platform: "instagram", content: "Countdown: 3 weeks to show. Calendar screenshot or text on band photo.", scheduledDate: "2026-04-22", status: "idea", notes: "Caption: 3 weeks. songs are mixed. we can almost play them without looking at the charts." },
+      { id: uid(), platform: "tiktok", content: "Song snippet: 20-sec best part of new song 1 over rehearsal clip.", scheduledDate: "2026-04-24", status: "idea", notes: "Caption: dropping this one soon. it took us 47 takes and it was worth every single one." },
+      { id: uid(), platform: "instagram", content: "Reel: Dave's promo video for the festival. Just repost whatever Dave makes.", scheduledDate: "2026-04-26", status: "idea", notes: "Caption: our friend dave made us look cooler than we are. see you at millvale." },
+      { id: uid(), platform: "instagram", content: "RELEASE DAY: Album/single art + streaming links. The big one.", scheduledDate: "2026-04-29", status: "idea", notes: "Caption: new songs are OUT. link in bio. or just come see us play them live may 13." },
+      { id: uid(), platform: "tiktok", content: "Release day reaction: film the band pressing play on final master for first time. Real reactions.", scheduledDate: "2026-04-29", status: "idea", notes: "Caption: hearing your own music on spotify for the first time is a very normal experience" },
+      { id: uid(), platform: "youtube", content: "Dave's release day BTS: pressing publish, checking streams, group chat reactions.", scheduledDate: "2026-05-01", status: "idea", notes: "Title: bleepythings — release day (behind the scenes)" },
+      { id: uid(), platform: "instagram", content: "Story: repost anyone who shares the new songs. Screenshot nice DMs (with permission).", scheduledDate: "2026-05-02", status: "idea", notes: "Also: 2 weeks to the show. we're actually doing this." },
+      { id: uid(), platform: "instagram", content: "Show week: photo of packed gear / setlist / to-do checklist. 1 week energy.", scheduledDate: "2026-05-06", status: "idea", notes: "Caption: gear is packed. setlist is memorized (mostly). we are going to be so loud." },
+      { id: uid(), platform: "tiktok", content: "Final rehearsal: best 20 seconds from dress rehearsal. Full energy. Dave films wide.", scheduledDate: "2026-05-08", status: "idea", notes: "Caption: dress rehearsal went hard. millvale is not ready." },
+      { id: uid(), platform: "instagram", content: "SHOW DAY stories: loading van, soundcheck, backstage, crowd, stage selfie. All day.", scheduledDate: "2026-05-16", status: "idea", notes: "Story overlays: it's happening / soundcheck voice: check check / THANK YOU MILLVALE" },
+      { id: uid(), platform: "instagram", content: "Post-show carousel: best performance photos from Dave. Crowd shots, stage, sweaty group photo.", scheduledDate: "2026-05-14", status: "idea", notes: "Caption: millvale music festival 2026. we did the thing. thank you to everyone who made noise with us." },
+      { id: uid(), platform: "youtube", content: "Full performance video or highlight reel from Dave. 3-5 min edit or full set.", scheduledDate: "2026-05-16", status: "idea", notes: "Title: bleepythings — LIVE at Millvale Music Festival 2026" },
+    ];
+
+    // ── full store blob ──
+    const blob = {
+      bandName: "bleepythings",
+      festivalName: "Millvale Music Festival",
+      festivalDate: "2026-05-16",
+      setLength: 40,
+      members,
+      songs,
+      schedule: [],
+      socialPosts,
+      roadmap
+    };
+
+    const json = JSON.stringify(blob);
+
+    // Write to localStorage
+    localStorage.setItem("bleepy-band-store", json);
+
+    // Show confirmation
+    document.getElementById("status").innerHTML = '<span class="ok">Done.</span> Seeded <code>bleepy-band-store</code> in localStorage. Redirecting...';
+    document.getElementById("json").textContent = JSON.stringify(blob, null, 2);
+
+    // Redirect after a brief pause so user can see it worked
+    setTimeout(() => {
+      window.location.href = "/#bleepy";
+    }, 1200);
+  </script>
+</body>
+</html>

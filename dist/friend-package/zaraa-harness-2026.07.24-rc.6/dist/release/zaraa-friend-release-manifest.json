@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 2,
+  "name": "Zaraa Harness Friend Release",
+  "version": "2026.07.24-rc.6",
+  "channel": "friends",
+  "generatedAt": "2026-08-16T22:45:03.817Z",
+  "source": {
+    "vcs": "git",
+    "revision": "712573417878de150a598e58195f6784cfc113e6",
+    "clean": true
+  },
+  "requirements": {
+    "node": ">=22.0.0",
+    "packageManager": "pnpm@9.15.4"
+  },
+  "entrypoints": {
+    "dashboardShell": "packages/web/dist/index.html",
+    "gatewayRuntime": "packages/core/dist/index.js",
+    "healthCheck": "/health"
+  },
+  "updatePolicy": {
+    "shellCache": "no-store",
+    "assetsCache": "immutable",
+    "notes": "Installers should refresh the dashboard shell on every launch while reusing hashed assets safely."
+  },
+  "artifacts": [
+    {
+      "path": "packages/web/dist/index.html",
+      "role": "dashboard-shell",
+      "bytes": 1800,
+      "sha256": "8507be04529cd851f1bd84602fae1830837775d9884d59a2daae141ab3799d5d"
+    },
+    {
+      "path": "packages/core/dist/index.js",
+      "role": "gateway-runtime",
+      "bytes": 36160,
+      "sha256": "d1dc361ee724d2d7975fcc898ec94999ba7b17fb5e9ed7b2d1fe3f836d3103a0"
+    },
+    {
+      "path": "packages/web/dist/assets/ActivityFeed-D9kMSkzI.js",
+      "role": "web-asset",
+      "bytes": 6904,
+      "sha256": "1856e4cf1748e000b469e3c8cd66d34fd7e634bd4ef3febe8dc87409d06e6e9d"
+    },
+    {
+      "path": "packages/web/dist/assets/ActivityPanel-CzvpxUSF.js",
+      "role": "web-asset",
+      "bytes": 2360,
+      "sha256": "99a3971d43b626c8f1b51d3cccb170d0578ffb67f2876814920c70af18b11c60"
+    },
+    {
+      "path": "packages/web/dist/assets/AgentWorldPanel-C3hFj2bx.css",
+      "role": "web-asset",
+      "bytes": 4627,
+      "sha256": "4b4679772afd3b4182496f30c5b520f7fccac5b2d32eaefe9322698585f4c956"
+    },
+    {
+      "path": "packages/web/dist/assets/AgentWorldPanel-DL3mTOxo.js",
+      "role": "web-asset",
+      "bytes": 22876,
+      "sha256": "1c8ce078e401d2039160a5c7b3aff791781bd81c12a76f7082bfd727344978cf"
+    },
+    {
+      "path": "packages/web/dist/assets/AnalyticsPanel-BShgF5Tl.js",
+      "role": "web-asset",
+      "bytes": 13020,
+      "sha256": "964fd650b2c9aa089c65e1450e12238708f002ff0edc5aff48c7acef191b6ccf"
+    },
+    {
+      "path": "packages/web/dist/assets/ApprovalsPanel-CGGx7Exm.js",
+      "role": "web-asset",
+      "bytes": 5769,
+      "sha256": "357a74c78ee69d4d52f646340f2b0b41845c1860fb99574684140c5359196877"
+    },
+    {
+      "path": "packages/web/dist/assets/AuditPanel-nUW2WReR.js",
+      "role": "web-asset",
+      "bytes": 9718,
+      "sha256": "cb2857a21882f97d0fe1cf946b6ee8d76045316269e009aad2e282b064271b55"
+    },
+    {
+      "path": "packages/web/dist/assets/AutonomyPanel-gsimdh42.js",
+      "role": "web-asset",
+      "bytes": 9214,
+      "sha256": "f78ac4ff7234d11c9a258afe93cd7c2eeeaf818cebb851a9292a8fd5cb9f14dd"
+    },
+    {
+      "path": "packages/web/dist/assets/BleepyPanel-CDgn_jdJ.js",
+      "role": "web-asset",
+      "bytes": 41398,
+      "sha256": "7f107eef9ddd27cb4abf87bf25e73ccdd054fc5aaafa40cbe4bcba28ed633e91"
+    },
+    {
+      "path": "packages/web/dist/assets/BrainMapPanel-CZDVmJW_.js",
+      "role": "web-asset",
+      "bytes": 44267,
+      "sha256": "d89401fe53d6e33ec0136bea171141508dd2c2f91dca56ffc1236f9072f5fc89"
+    },
+    {
+      "path": "packages/web/dist/assets/ChatPanel-CLbvDvio.js",
+      "role": "web-asset",
+      "bytes": 68137,
+      "sha256": "0fda6b84f3baf68b116178f8fab32fe7c20df1c7fdea0a6ea23e9f1996c08eee"
+    },
+    {
+      "path": "packages/web/dist/assets/Claw3DPanel-5GQ15jgB.js",
+      "role": "web-asset",
+      "bytes": 19986,
+      "sha256": "9aae61ef7e3f1fb98c13698c9241e64f5f43acb8a35500045535c946ea1e28bb"
+    },
+    {
+      "path": "packages/web/dist/assets/CreativeLedger-BCR-MWUl.js",
+      "role": "web-asset",
+      "bytes": 29991,
+      "sha256": "85179529fab4ca0644442794bed8f02a91c728b3defd2604fb2048a1eeb59286"
+    },
+    {
+      "path": "packages/web/dist/assets/DashboardPanel-BfajgEXO.js",
+      "role": "web-asset",
+      "bytes": 256563,
+      "sha256": "2bc72d82bce8b28d46aad97575a8dfff29b134c6f23d0bb6d33cb4ec097862ea"
+    },
+    {
+      "path": "packages/web/dist/assets/DesignerStudio-BVCa5Rod.js",
+      "role": "web-asset",
+      "bytes": 22306,
+      "sha256": "9ea7c821dd773bd62e9cad2e5f0f48663ae2bfd9a13d569ea48ace049ac8c5e4"
+    },
+    {
+      "path": "packages/web/dist/assets/DocumentsPanel-BGFcU_2x.js",
+      "role": "web-asset",
+      "bytes": 8577,
+      "sha256": "01e2c0495daff6711f3c29da5354eb55e92fcf862c740a01b129c04519cca5dd"
+    },
+    {
+      "path": "packages/web/dist/assets/GuiAgentPanel-C9zaM1go.js",
+      "role": "web-asset",
+      "bytes": 8682,
+      "sha256": "f82d705c6aac7958565f15a6dd063da62ec4182c4d332597f3409a7fcde3c319"
+    },
+    {
+      "path": "packages/web/dist/assets/HomePanel-QxwjL4C_.js",
+      "role": "web-asset",
+      "bytes": 19187,
+      "sha256": "7822683cff6e9f671bfe4b95542e2b3827079d9d3836368d8f0152b4c1da3e21"
+    },
+    {
+      "path": "packages/web/dist/assets/IdePanel-D0zM5DYb.js",
+      "role": "web-asset",
+      "bytes": 23884,
+      "sha256": "6cb02948dabd414021804ccd9209ebdfea2bac4612fb2d13e5a80cc2b769ed2c"
+    },
+    {
+      "path": "packages/web/dist/assets/Inspector-4WvW9KWQ.js",
+      "role": "web-asset",
+      "bytes": 895,
+      "sha256": "a50fe11d2c051ff300b583480c24f6b0ef106a3323a17da33ea652c62b62d7fe"
+    },
+    {
+      "path": "packages/web/dist/assets/LeaderboardPanel-CSMrcPa1.js",
+      "role": "web-asset",
+      "bytes": 8105,
+      "sha256": "ee9ab6a26936110b745670cec230cc4ce01ccc2a80cc66edafc29b73a29a6a02"
+    },
+    {
+      "path": "packages/web/dist/assets/LegalPanel-KBJnvW6z.js",
+      "role": "web-asset",
+      "bytes": 4511,
+      "sha256": "67453d5079169a70686f5ef04e099cd8bed6ef8071fe5d6de67162d59831ce2d"
+    },
+    {
+      "path": "packages/web/dist/assets/LivePanel-8QpFE5xX.js",
+      "role": "web-asset",
+      "bytes": 5521,
+      "sha256": "ac9781c53804dca6b87e51e7b0f4b3f71ff3fef41aa831fbe8b468168a69dd04"
+    },
+    {
+      "path": "packages/web/dist/assets/MemoryPanel-Fn2_1mZt.js",
+      "role": "web-asset",
+      "bytes": 7242,
+      "sha256": "dc090739726d668b637b76ed83de8d11921b3aeab04d1dde64e28aed9eba4258"
+    },
+    {
+      "path": "packages/web/dist/assets/MissionControl-B1EH3KHc.js",
+      "role": "web-asset",
+      "bytes": 98035,
+      "sha256": "1fd661a20861c2efa5d7404161cf57db98c4afdf5a3ddc0f91f7eeceab080fc1"
+    },
+    {
+      "path": "packages/web/dist/assets/MissionStackCockpitPanel-DLBdlHyV.js",
+      "role": "web-asset",
+      "bytes": 13216,
+      "sha256": "261e724b68bbfc2bc66e2dad5c9c60eeb9e19e48c53127128e5eae8947e219de"
+    },
+    {
+      "path": "packages/web/dist/assets/ModelName-C0iuC7AN.js",
+      "role": "web-asset",
+      "bytes": 525,
+      "sha256": "2ca0de48b31c56f2347ecc00648e908d8e4584b4109d8df76db2891b36e30866"
+    },
+    {
+      "path": "packages/web/dist/assets/OsrsLearningPanel-DkCNpMF1.js",
+      "role": "web-asset",
+      "bytes": 23922,
+      "sha256": "fa9d8e2b6024a3abc14275de07cb56aea4671ea3c46c950811f9497056074927"
+    },
+    {
+      "path": "packages/web/dist/assets/PanelCard-1Ak2mjsf.js",
+      "role": "web-asset",
+      "bytes": 493,
+      "sha256": "1ac12b60deafe8c63da58cccd24f6acd5be9f5d7830be750d8fab49f8599d0b9"
+    },
+    {
+      "path": "packages/web/dist/assets/PublicRevenuePage-5JQB_dGw.js",
+      "role": "web-asset",
+      "bytes": 19818,
+      "sha256": "41af028948babceca84c8990ae1ce95539090a6226bdc5685f5f0457f541cf43"
+    },
+    {
+      "path": "packages/web/dist/assets/PulsePanel-B9l7_ObW.js",
+      "role": "web-asset",
+      "bytes": 9097,
+      "sha256": "ea9b6bb1b35b3b1b7d2421e80fcf0449dfd67ee3a99b248ad1761ff2d83b2fcd"
+    },
+    {
+      "path": "packages/web/dist/assets/RevenuePanel-B7f2Jl1A.js",
+      "role": "web-asset",
+      "bytes": 31573,
+      "sha256": "bc4ffd8a32298bdb3ccbed0a7c23975fef50486f717d3594e8e72986f6228bed"
+    },
+    {
+      "path": "packages/web/dist/assets/RiskMonitorPanel-BpvlydQq.js",
+      "role": "web-asset",
+      "bytes": 13582,
+      "sha256": "71bb2ac76d6af8372a966ae8b5614be0597caaa927dec3656df36dabce9a04ce"
+    },
+    {
+      "path": "packages/web/dist/assets/SectionLabel-D7eQhT5w.js",
+      "role": "web-asset",
+      "bytes": 252,
+      "sha256": "ba74eca9a1f35241ef8e967b6493862b181abd025c5c220efc42a02502b888f5"
+    },
+    {
+      "path": "packages/web/dist/assets/SelfEditPanel-RaqFxyeE.js",
+      "role": "web-asset",
+      "bytes": 7292,
+      "sha256": "52a201e5c63c7ba72c59e0afd1c128824249a282419297814bc8cef79734a451"
+    },
+    {
+      "path": "packages/web/dist/assets/SettingsPanel-D3q5tF__.js",
+      "role": "web-asset",
+      "bytes": 18386,
+      "sha256": "493108cb5e9ee7ef8bab89d3d2abfcc79b306e8b1b5ce5cd83ab1f6ef94f4beb"
+    },
+    {
+      "path": "packages/web/dist/assets/ShareBar-C5Wk7n0y.js",
+      "role": "web-asset",
+      "bytes": 963,
+      "sha256": "4a35186209f38baf42c1e7fe0b6c0350a22158204fa33b7dcd8a171f9c1e0e95"
+    },
+    {
+      "path": "packages/web/dist/assets/ShipReadinessPanel-Bf63JrF2.js",
+      "role": "web-asset",
+      "bytes": 36741,
+      "sha256": "0ef8f2304c03376df5ea7e2c787402874271cf16f11fa5d304265a80fef94510"
+    },
+    {
+      "path": "packages/web/dist/assets/StatBlock-Bv4Ff0QG.js",
+      "role": "web-asset",
+      "bytes": 1218,
+      "sha256": "20d2e18c19235db48536cd3fe8bdf00df90193cf52fe781cd6c28f5bd70d3b58"
+    },
+    {
+      "path": "packages/web/dist/assets/StatusDot-C_JOzcRc.js",
+      "role": "web-asset",
+      "bytes": 269,
+      "sha256": "290c45ef2fcf759a7f091f7500ba6541fb5c7b6745b9b5ecf9b865e7dca060ea"
+    },
+    {
+      "path": "packages/web/dist/assets/SystemPanel-CWvsUQYw.js",
+      "role": "web-asset",
+      "bytes": 31635,
+      "sha256": "d8b630e1a4685b748ffad60566c0f9c157a089976e96935bc4dcc105663866ab"
+    },
+    {
+      "path": "packages/web/dist/assets/TentaclesPanel-CMi_7UAM.js",
+      "role": "web-asset",
+      "bytes": 20937,
+      "sha256": "432c168ea86e66f40156ed8b9c35744868638b959509fe5bc8e3628d1e47da93"
+    },
+    {
+      "path": "packages/web/dist/assets/TokenBudgetPanel-DCVP2LrV.js",
+      "role": "web-asset",
+      "bytes": 19584,
+      "sha256": "5afe1dbda11c166050a6cfec4199f7ae26d24508e6ec30d5f684b24bc0cc6023"
+    },
+    {
+      "path": "packages/web/dist/assets/TradingPanel-GKKrSvqR.js",
+      "role": "web-asset",
+      "bytes": 40000,
+      "sha256": "24f7c3a40d0f8021067c917f2b26031df8fbab855224cb5541bb7244e4427050"
+    },
+    {
+      "path": "packages/web/dist/assets/VoiceButton-Bt5n2CNc.js",
+      "role": "web-asset",
+      "bytes": 2124,
+      "sha256": "fba8448a63739d17f6f643d7e8777b27f8f1e64fe39307a77329fb471f3279e3"
+    },
+    {
+      "path": "packages/web/dist/assets/ZaraacodePanel-ooh4z2k_.js",
+      "role": "web-asset",
+      "bytes": 58688,
+      "sha256": "b1f9ad9e6313061413ab4c27f254d5f8ee6afb1494c190e827b68c65aa72b0da"
+    },
+    {
+      "path": "packages/web/dist/assets/autonomy-store-DNLysbvL.js",
+      "role": "web-asset",
+      "bytes": 1849,
+      "sha256": "a059942ce9089616e8499281e28548eaceb2b2422a128bb9b1c2a75edee2a3c5"
+    },
+    {
+      "path": "packages/web/dist/assets/brain-map-actions-BapMNZ87.js",
+      "role": "web-asset",
+      "bytes": 3216,
+      "sha256": "da7b8aaa7d9577f47bb7e3c9a43e407ea821bc259151862784752aee689e564d"
+    },
+    {
+      "path": "packages/web/dist/assets/budget-store-D-YJ3s-C.js",
+      "role": "web-asset",
+      "bytes": 349,
+      "sha256": "cd81ce79406cc3903642ec486995dc562d6b5412c11718430b8b3cd6c545e9d3"
+    },
+    {
+      "path": "packages/web/dist/assets/charts-vendor-Bc647sg2.js",
+      "role": "web-asset",
+      "bytes": 358695,
+      "sha256": "5fae3a35a15828667317ce624e4cab6276625a5240dc7b5a77d34c37afef8f22"
+    },
+    {
+      "path": "packages/web/dist/assets/content-vendor-CD6-kJUt.js",
+      "role": "web-asset",
+      "bytes": 70468,
+      "sha256": "d2ada4e389fbf00c54b58a083912f2739ab538ad7eba124f1cb2af1d7bde0915"
+    },
+    {
+      "path": "packages/web/dist/assets/designer-project-store-BBOoH_RM.js",
+      "role": "web-asset",
+      "bytes": 6090,
+      "sha256": "0223010770df2080cb5856c083f1bf0410c0424351b8e973a953f0dc2c628350"
+    },
+    {
+      "path": "packages/web/dist/assets/designer-studio-OTO2FP4x.js",
+      "role": "web-asset",
+      "bytes": 24811,
+      "sha256": "1f139cc95d091932b1491276b29bfd79eaf37c4f873c80f2577da13838e72748"
+    },
+    {
+      "path": "packages/web/dist/assets/format-count-BbuSyQV3.js",
+      "role": "web-asset",
+      "bytes": 249,
+      "sha256": "7c3c29388047a8acad15eac2473f789ca59dd94b7b6b6e59a840ee9293c73ae5"
+    },
+    {
+      "path": "packages/web/dist/assets/format-model-label-DiMtvwGZ.js",
+      "role": "web-asset",
+      "bytes": 1814,
+      "sha256": "5c80d3b289de0c067c17e7c136a9a6df2b12fa8c08f53a3a5d031b8c9c6e41d9"
+    },
+    {
+      "path": "packages/web/dist/assets/index-B9Lo4w4Y.js",
+      "role": "web-asset",
+      "bytes": 218877,
+      "sha256": "90938dae6c9f98f3356a0f0a5a75be79dbca314978753b788a160c4603e8a039"
+    },
+    {
+      "path": "packages/web/dist/assets/index-Dp-MZdI9.css",
+      "role": "web-asset",
+      "bytes": 404946,
+      "sha256": "a381b5a16cab07046a062e0303be6280085f2633e66a6ef6dff25fb6572a86dd"
+    },
+    {
+      "path": "packages/web/dist/assets/react-vendor-BELSBECJ.js",
+      "role": "web-asset",
+      "bytes": 430643,
+      "sha256": "d889f36f29e1f3bf6332ea6bd1a7b5f1b73e113d397117ffcb94b741e2880eb9"
+    },
+    {
+      "path": "packages/web/dist/assets/revenue-content-J-Z8ovXu.js",
+      "role": "web-asset",
+      "bytes": 5452,
+      "sha256": "dafbda9efe981811ca3162ab3939fc5255602eb3536c5f07a4ce54626d842f51"
+    },
+    {
+      "path": "packages/web/dist/assets/risk-monitor-store-BY_jdAEj.js",
+      "role": "web-asset",
+      "bytes": 2770,
+      "sha256": "99265e4188be8c3ef5fd009376357775c26ef062eaa78c128b15dd24eb3a0f64"
+    },
+    {
+      "path": "packages/web/dist/assets/system-ram-CWq_pibl.js",
+      "role": "web-asset",
+      "bytes": 674,
+      "sha256": "45c97c69dfbe9ec98b7e705559250fb17f646648fe2b0a6af44fb43f6666cf88"
+    },
+    {
+      "path": "packages/web/dist/assets/useChat-Df6IySjA.js",
+      "role": "web-asset",
+      "bytes": 12064,
+      "sha256": "c9ef9f204142d7406b1826e4c2cecd450fb68fa8770ea5d0ed0462937a6d8ce6"
+    },
+    {
+      "path": "packages/web/dist/assets/zaraacoder-model-controls-DEz9aizV.js",
+      "role": "web-asset",
+      "bytes": 4157,
+      "sha256": "e3e0c4b1172aaac02ebf7c365b4fe0a174f63ed0134353d72c4fa50b75e35b68"
+    }
+  ]
+}

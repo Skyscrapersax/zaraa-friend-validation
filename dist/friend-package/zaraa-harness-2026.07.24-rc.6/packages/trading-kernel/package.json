@@ -1,0 +1,39 @@
+{
+  "name": "@zaraa/trading-kernel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Native Rust kernels for latency-sensitive trading route scoring.",
+  "main": "./index.cjs",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.cjs",
+      "default": "./index.cjs"
+    }
+  },
+  "files": [
+    "index.cjs",
+    "index.d.ts",
+    "*.node"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "napi build --platform --release --features napi-bindings --dts target/bindings.generated.d.ts",
+    "test": "cargo test"
+  },
+  "napi": {
+    "binaryName": "trading_kernel",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc",
+      "aarch64-pc-windows-msvc"
+    ]
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0"
+  }
+}
