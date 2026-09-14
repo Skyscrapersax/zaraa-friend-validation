@@ -1,23 +1,28 @@
 # Trimmed from zaraa's friend-package-validation.yml: package bytes are
 # committed in-repo (built + sanitized on the maintainer's Mac), so there is
 # no build job — this runs ONLY the Windows clean-install validation, the one
-# leg that cannot run locally. Node 25, no pnpm/corepack preinstalled: the
+# leg that cannot run locally. Node 24 LTS, no pnpm preinstalled: the
 # installer under test must bootstrap pnpm itself.
 name: Windows Friend Package Validation
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 concurrency:
-  group: windows-validation
+  group: windows-validation-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate-windows:
     name: Validate Windows
     runs-on: windows-latest
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -26,14 +31,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 25
+          node-version: 24
+
+      - name: Validation guard regressions
+        run: node --test tests/*.test.mjs
 
       - name: Confirm bare environment
-        shell: bash
+        shell: pwsh
         run: |
-          echo "node:     $(node -v)"
-          echo "pnpm:     $(command -v pnpm || echo 'not present (expected)')"
-          echo "corepack: $(command -v corepack || echo 'not present on Node 25 (expected)')"
+          node -v
+          if (Get-Command pnpm -ErrorAction SilentlyContinue) { throw 'Preinstalled pnpm would invalidate bootstrap test' }
 
       - name: Clean-install validation
         run: node scripts/friend-package-validate-windows-temp.mjs
@@ -44,5 +51,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: validation-Windows
-          path: dist/friend-package/windows-clean-install-validation-*.json
+          path: .validation/*.json
           retention-days: 7

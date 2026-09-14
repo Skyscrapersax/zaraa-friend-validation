@@ -26,6 +26,19 @@ import {
 import { syncPlatformValidationHandoff } from "./friend-package-validation-handoff.mjs";
 import { scanTextForSecrets } from "./zaraa-secret-scan.mjs";
 
+/** A mirror may differ in Git HEAD only; dirty inputs and missing identity still fail. */
+export function matchesMirrorIdentity({ issues, marker, stagedRevision, currentRevision, latest, manifestSha256 }) {
+	return issues.length > 0
+		&& issues.every(issue => /^source HEAD [a-f0-9]{40} differs from (?:staged|current) manifest revision [a-f0-9]{40}$/.test(issue))
+		&& /^[a-f0-9]{40}$/.test(stagedRevision ?? "")
+		&& marker?.canonicalRevision === stagedRevision
+		&& latest?.source?.revision === stagedRevision && latest.source.clean === true
+		&& (!currentRevision || currentRevision === stagedRevision)
+		&& marker?.packageGeneratedAt === latest?.generatedAt
+		&& /^[a-f0-9]{64}$/.test(manifestSha256 ?? "")
+		&& marker?.manifestSha256 === manifestSha256;
+}
+
 /** Text surfaces scanned for secret-shaped content inside the staged friend kit. */
 const STAGED_SECRET_SCAN_EXTENSIONS = new Set([
 	".md",
@@ -1289,9 +1302,19 @@ export function verifyFriendPackage(options = {}) {
 	} catch (error) {
 		sourceIdentityIssues.push(error instanceof Error ? error.message : String(error));
 	}
+	const mirrorPath = join(root, ".mirror-provenance.json");
+	const mirrorIdentity = matchesMirrorIdentity({
+		issues: sourceIdentityIssues,
+		marker: existsSync(mirrorPath) ? readJson(mirrorPath) : null,
+		stagedRevision, currentRevision, latest,
+		manifestSha256: stagedManifestPath && existsSync(stagedManifestPath)
+			? createHash("sha256").update(readFileSync(stagedManifestPath)).digest("hex") : null,
+	});
 	checks.push(
 		sourceIdentityIssues.length > 0
-			? makeCheck("FAIL", "Release source identity", sourceIdentityIssues.join("; "))
+			? mirrorIdentity
+				? makeCheck("WARN", "Release source identity", `Pinned mirror of ${stagedRevision}; package date and staged manifest SHA256 match. This validates the recorded artifact, not current canonical source.`)
+				: makeCheck("FAIL", "Release source identity", sourceIdentityIssues.join("; "))
 			: makeCheck(
 					"PASS",
 					"Release source identity",
@@ -1509,7 +1532,7 @@ export function verifyFriendPackage(options = {}) {
 
 	const platforms = platformMatrix({
 		root,
-		packageRoot,
+		packageRoot: options.evidenceRoot ?? packageRoot,
 		version: latest.version,
 		packageGeneratedAt: latest.generatedAt,
 	});
@@ -1629,9 +1652,16 @@ function printResult(result) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-	const result = verifyFriendPackage();
+	const mirror = existsSync(join(process.cwd(), ".mirror-provenance.json"));
+	const evidenceRoot = join(process.cwd(), ".validation");
+	const result = verifyFriendPackage(mirror ? { evidenceRoot, writeReport: false, syncPublic: false } : {});
+	if (mirror) {
+		mkdirSync(evidenceRoot, { recursive: true });
+		result.reportPath = join(evidenceRoot, "validation-report.json");
+		writeFileSync(result.reportPath, `${JSON.stringify(result.report, null, 2)}\n`);
+	}
 	printResult(result);
-	if (result.checks.some((check) => check.status === "FAIL")) {
+	if (!result.safeToShare) {
 		process.exitCode = 1;
 	}
 }

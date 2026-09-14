@@ -20,6 +20,10 @@ const VALIDATION_HOST_ENV_KEYS = [
 ];
 
 export function assertPackageStructureValid(verification) {
+	if (!Array.isArray(verification?.checks) || verification.checks.length === 0
+		|| verification.checks.some(check => !["PASS", "WARN", "FAIL"].includes(check?.status))) {
+		throw new Error("Friend package verification missing or malformed before install");
+	}
 	const failures = (verification?.checks ?? []).filter((check) => check.status === "FAIL");
 	if (failures.length > 0) {
 		throw new Error(
@@ -33,12 +37,11 @@ export function assertPackageStructureValid(verification) {
 }
 
 export function platformValidationExitCode({ evidence, verification, platform }) {
+	if (evidence?.status !== "pass") return 1;
 	if (!Number.isInteger(evidence?.exitCode) || evidence.exitCode !== 0) {
 		return Number.isInteger(evidence?.exitCode) && evidence.exitCode > 0 ? evidence.exitCode : 1;
 	}
-	if ((verification?.checks ?? []).some((check) => check.status === "FAIL")) {
-		return 1;
-	}
+	try { assertPackageStructureValid(verification); } catch { return 1; }
 	const platformResult = verification?.report?.platformMatrix?.find(
 		(entry) => entry.platform === platform,
 	);

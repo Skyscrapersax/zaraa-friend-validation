@@ -78,7 +78,7 @@ export async function runFriendRuntimeSmoke({ installDir, tempBase, env, timeout
 		while (Date.now() < deadline && child.exitCode === null) {
 			try {
 				const response = await fetchWithTimeout(`http://127.0.0.1:${port}/ready`);
-				if (response.ok) {
+				if (response.ok && (await response.json()).status === "ready") {
 					ready = true;
 					break;
 				}
