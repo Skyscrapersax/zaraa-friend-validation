@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 import { compareArchiveToStage, matchesMirrorIdentity } from "../scripts/friend-package-verify.mjs";
-import { assertPackageStructureValid, platformValidationExitCode, createValidationEnvironment } from "../scripts/friend-package-validation-runner.mjs";
+import { assertPackageStructureValid, platformValidationExitCode, createValidationEnvironment, collectValidationProvenance } from "../scripts/friend-package-validation-runner.mjs";
 import { runFriendRuntimeSmoke } from "../scripts/friend-package-runtime-smoke.mjs";
 
 test("mirror identity accepts only a clean HEAD mismatch with complete byte/build pins", () => {
@@ -37,6 +37,15 @@ test("missing checks or a failed install cannot yield a successful platform exit
 	const verification = { checks: [{ status: "PASS" }], report: { platformMatrix: [{ platform: "Windows", status: "pass" }] } };
 	assert.equal(platformValidationExitCode({ evidence: { status: "fail", exitCode: 0 }, verification, platform: "Windows" }), 1);
 	assert.equal(platformValidationExitCode({ evidence: { status: "pass", exitCode: 0 }, verification, platform: "Windows" }), 0);
+});
+
+test("Windows pnpm provenance executes its command shim through PowerShell", async () => {
+	const result = await collectValidationProvenance({ platform: "win32", runCommand: async (command, args) => {
+		assert.equal(command, "powershell.exe");
+		assert.deepEqual(args, ["-NoProfile", "-Command", "pnpm --version"]);
+		return { exitCode: 0, output: "9.15.4\r\n" };
+	} });
+	assert.equal(result.pnpmVersion, "9.15.4");
 });
 
 test("Git's omitted empty directories do not hide missing or modified runtime files", async () => {

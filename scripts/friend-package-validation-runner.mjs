@@ -98,7 +98,10 @@ export async function collectValidationProvenance({
 } = {}) {
 	let pnpmVersion = "unavailable";
 	try {
-		const result = await runCommand("pnpm", ["--version"], { cwd, env, logPath });
+		// Windows pnpm is a .cmd shim; spawn() cannot execute it directly.
+		const result = platform === "win32"
+			? await runCommand("powershell.exe", ["-NoProfile", "-Command", "pnpm --version"], { cwd, env, logPath })
+			: await runCommand("pnpm", ["--version"], { cwd, env, logPath });
 		if (result.exitCode === 0) {
 			pnpmVersion = result.output.trim() || pnpmVersion;
 		}

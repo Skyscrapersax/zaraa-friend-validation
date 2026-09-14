@@ -52,4 +52,5 @@ jobs:
         with:
           name: validation-Windows
           path: .validation/*.json
+          include-hidden-files: true
           retention-days: 7
