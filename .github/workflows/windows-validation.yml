@@ -1,7 +1,7 @@
 # Trimmed from zaraa's friend-package-validation.yml: package bytes are
 # committed in-repo (built + sanitized on the maintainer's Mac), so there is
 # no build job — this runs ONLY the Windows clean-install validation, the one
-# leg that cannot run locally. Node 24 LTS, no pnpm preinstalled: the
+# leg that cannot run locally. Node 22 LTS, no pnpm preinstalled: the
 # installer under test must bootstrap pnpm itself.
 name: Windows Friend Package Validation
 
@@ -31,7 +31,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          # RC6 includes better-sqlite3 11.x: Windows prebuilds cover Node22.
+          node-version: 22
 
       - name: Validation guard regressions
         run: node --test tests/*.test.mjs

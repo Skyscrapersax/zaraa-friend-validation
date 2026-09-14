@@ -15,7 +15,7 @@ node scripts/friend-package-verify.mjs
 
 The final verifier exits nonzero until every platform passes for the same package build. The Windows job can pass its own platform while overall sharing remains blocked. Reports go into ignored `.validation/`; the verifier never rewrites the pinned package metadata or published release files in this mirror. `--temp-base PATH` chooses a parent for a new isolated folder; cleanup removes only that new child.
 
-CI runs on pull requests, main pushes and manual dispatch. It uses [Node24 LTS](https://nodejs.org/en/about/previous-releases), asserts no preinstalled pnpm, and uploads `.validation/*.json` on success or failure. No provider keys, model calls or live trading are required.
+CI runs on pull requests, main pushes and manual dispatch. Use **Node22 LTS** for this archived kit. RC6 includes `better-sqlite3` 11.10.0, whose [Windows prebuilds](https://github.com/WiseLibs/better-sqlite3/releases/tag/v11.10.0) do not cover Node24; an actual Node24 clean install failed attempting native compilation. Node22 remains [an LTS release](https://nodejs.org/en/about/previous-releases). CI asserts no preinstalled pnpm and uploads `.validation/*.json` on success or failure. No provider keys, model calls or live trading are required.
 
 ## Source and byte identity
 
