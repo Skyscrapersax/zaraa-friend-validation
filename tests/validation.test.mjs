@@ -1,12 +1,22 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { chmod, mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { chmod, mkdtemp, mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 import { compareArchiveToStage, matchesMirrorIdentity } from "../scripts/friend-package-verify.mjs";
 import { assertPackageStructureValid, platformValidationExitCode, createValidationEnvironment, collectValidationProvenance } from "../scripts/friend-package-validation-runner.mjs";
 import { runFriendRuntimeSmoke } from "../scripts/friend-package-runtime-smoke.mjs";
+
+test("shipped updater accepts cross-drive destinations and rejects nested folders", async () => {
+	const script = await readFile(new URL("../dist/friend-package/zaraa-harness-2026.07.24-rc.6/scripts/friend-kit-update.mjs", import.meta.url), "utf8");
+	const body = script.match(/function isInside\(parent, child\) \{([\s\S]*?)\n\}/)[1];
+	const inside = new Function("relative", "resolve", "isAbsolute", `return (parent, child) => {${body}}`)(path.win32.relative, path.win32.resolve, path.win32.isAbsolute);
+	assert.equal(inside("D:\\kit", "C:\\Temp\\zaraa"), false);
+	assert.equal(inside("C:\\kit", "C:\\kit\\nested"), true);
+	assert.equal(inside("C:\\kit", "C:\\kit"), true);
+	assert.equal(inside("C:\\kit", "C:\\kit-sibling"), false);
+});
 
 test("mirror identity accepts only a clean HEAD mismatch with complete byte/build pins", () => {
 	const revision = "a".repeat(40), hash = "c".repeat(64);
