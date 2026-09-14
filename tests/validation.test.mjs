@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { chmod, mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -46,11 +46,17 @@ test("Git's omitted empty directories do not hide missing or modified runtime fi
 		await mkdir(path.join(fixture, "empty/nested"), { recursive: true });
 		await mkdir(stage);
 		await writeFile(path.join(fixture, "runtime.js"), "original\n");
+		await chmod(path.join(fixture, "runtime.js"), 0o600);
 		await writeFile(path.join(stage, "runtime.js"), "original\n");
 		const pack = () => execFileSync("tar", ["-czf", archive, "-C", root, "fixture"], { env: { ...process.env, COPYFILE_DISABLE: "1" } });
 		pack();
 		assert.ok(compareArchiveToStage(stage, archive, "fixture").differences.length > 0);
 		assert.deepEqual(compareArchiveToStage(stage, archive, "fixture", true).differences, []);
+		if (process.platform !== "win32") {
+			await chmod(path.join(stage, "runtime.js"), 0o755);
+			assert.ok(compareArchiveToStage(stage, archive, "fixture", true).differences.some(d => d.includes("mode")));
+			await chmod(path.join(stage, "runtime.js"), 0o644);
+		}
 		await writeFile(path.join(stage, "runtime.js"), "modified\n");
 		assert.ok(compareArchiveToStage(stage, archive, "fixture", true).differences.some(d => d.includes("file bytes differ")));
 		await writeFile(path.join(fixture, "empty/required.js"), "required\n");

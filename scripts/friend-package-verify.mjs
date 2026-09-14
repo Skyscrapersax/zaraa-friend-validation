@@ -553,7 +553,7 @@ function archiveInventory(archivePath, packageDirectory) {
 	throw new Error(`unsupported archive format: ${archivePath}`);
 }
 
-export function compareArchiveToStage(stageDir, archivePath, packageDirectory, allowMissingEmptyDirectories = false) {
+export function compareArchiveToStage(stageDir, archivePath, packageDirectory, gitMirror = false) {
 	const stage = stageInventory(stageDir);
 	const archived = archiveInventory(archivePath, packageDirectory);
 	const nonempty = new Set();
@@ -570,7 +570,7 @@ export function compareArchiveToStage(stageDir, archivePath, packageDirectory, a
 		if (!expected) {
 			// Git cannot store empty directories. Only a pinned mirror gets this exception;
 			// missing files, symlinks and directories with content still fail.
-			if (allowMissingEmptyDirectories && actual.type === "directory" && !nonempty.has(path)) continue;
+			if (gitMirror && actual.type === "directory" && !nonempty.has(path)) continue;
 			differences.push(`${path}: extra in archive`);
 			continue;
 		}
@@ -582,7 +582,9 @@ export function compareArchiveToStage(stageDir, archivePath, packageDirectory, a
 			differences.push(`${path}: type ${actual.type}, expected ${expected.type}`);
 			continue;
 		}
-		if (actual.mode !== null && expected.mode !== null && expected.mode !== actual.mode) {
+		// Git preserves executable bits, not owner/group read/write permissions.
+		const modeMask = gitMirror ? 0o111 : 0o777;
+		if (actual.mode !== null && expected.mode !== null && (expected.mode & modeMask) !== (actual.mode & modeMask)) {
 			differences.push(
 				`${path}: mode ${actual.mode.toString(8)}, expected ${expected.mode.toString(8)}`,
 			);
