@@ -211,13 +211,14 @@ async function main() {
 			plan.env.ZARAA_DIR,
 		],
 		{
-			cwd: plan.root,
+			// Windows tools can create relative profile/cache files. Own those too.
+			cwd: plan.tempBase,
 			env: validationEnv,
 			logPath: plan.logPath,
 		},
 	);
 	const provenance = await collectValidationProvenance({
-		cwd: plan.root,
+		cwd: plan.tempBase,
 		env: validationEnv,
 		logPath: plan.provenanceLogPath,
 	});
