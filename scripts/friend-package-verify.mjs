@@ -553,15 +553,24 @@ function archiveInventory(archivePath, packageDirectory) {
 	throw new Error(`unsupported archive format: ${archivePath}`);
 }
 
-function compareArchiveToStage(stageDir, archivePath, packageDirectory) {
+export function compareArchiveToStage(stageDir, archivePath, packageDirectory, allowMissingEmptyDirectories = false) {
 	const stage = stageInventory(stageDir);
 	const archived = archiveInventory(archivePath, packageDirectory);
+	const nonempty = new Set();
+	for (const [name, entry] of archived) {
+		if (entry.type === "directory") continue;
+		const parts = name.split("/");
+		for (let i = 1; i < parts.length; i++) nonempty.add(parts.slice(0, i).join("/"));
+	}
 	const paths = [...new Set([...stage.keys(), ...archived.keys()])].sort();
 	const differences = [];
 	for (const path of paths) {
 		const expected = stage.get(path);
 		const actual = archived.get(path);
 		if (!expected) {
+			// Git cannot store empty directories. Only a pinned mirror gets this exception;
+			// missing files, symlinks and directories with content still fail.
+			if (allowMissingEmptyDirectories && actual.type === "directory" && !nonempty.has(path)) continue;
 			differences.push(`${path}: extra in archive`);
 			continue;
 		}
@@ -1489,7 +1498,7 @@ export function verifyFriendPackage(options = {}) {
 			continue;
 		}
 		try {
-			const comparison = compareArchiveToStage(stageDir, archivePath, packageDirectory);
+			const comparison = compareArchiveToStage(stageDir, archivePath, packageDirectory, mirrorIdentity);
 			checks.push(
 				comparison.differences.length === 0
 					? makeCheck(

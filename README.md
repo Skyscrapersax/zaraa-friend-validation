@@ -21,4 +21,6 @@ CI runs on pull requests, main pushes and manual dispatch. It uses [Node24 LTS](
 
 `.gitattributes` preserves archive-matching bytes on Windows. `.mirror-provenance.json` pins canonical revision, package build timestamp and staged manifest SHA256. The verifier permits only the expected difference between mirror Git HEAD and canonical revision. Dirty inputs, missing identity, changed manifest, mixed revisions, archive mismatches and content-scan failures still block installation. There is no environment-variable identity bypass.
 
+Git omits empty directories. A verified mirror may omit those archive entries; missing or modified files, symlink targets and nonempty directories still fail. Archive hashes remain mandatory.
+
 The original checkout's unfinished edits are preserved; changes were developed in an isolated Git worktree. Runtime artifact bytes are unchanged.

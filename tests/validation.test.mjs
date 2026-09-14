@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { matchesMirrorIdentity } from "../scripts/friend-package-verify.mjs";
+import { compareArchiveToStage, matchesMirrorIdentity } from "../scripts/friend-package-verify.mjs";
 import { assertPackageStructureValid, platformValidationExitCode, createValidationEnvironment } from "../scripts/friend-package-validation-runner.mjs";
 import { runFriendRuntimeSmoke } from "../scripts/friend-package-runtime-smoke.mjs";
 
@@ -36,6 +37,26 @@ test("missing checks or a failed install cannot yield a successful platform exit
 	const verification = { checks: [{ status: "PASS" }], report: { platformMatrix: [{ platform: "Windows", status: "pass" }] } };
 	assert.equal(platformValidationExitCode({ evidence: { status: "fail", exitCode: 0 }, verification, platform: "Windows" }), 1);
 	assert.equal(platformValidationExitCode({ evidence: { status: "pass", exitCode: 0 }, verification, platform: "Windows" }), 0);
+});
+
+test("Git's omitted empty directories do not hide missing or modified runtime files", async () => {
+	const root = await mkdtemp(path.join(tmpdir(), "friend-archive-test."));
+	try {
+		const fixture = path.join(root, "fixture"), stage = path.join(root, "stage"), archive = path.join(root, "fixture.tar.gz");
+		await mkdir(path.join(fixture, "empty/nested"), { recursive: true });
+		await mkdir(stage);
+		await writeFile(path.join(fixture, "runtime.js"), "original\n");
+		await writeFile(path.join(stage, "runtime.js"), "original\n");
+		const pack = () => execFileSync("tar", ["-czf", archive, "-C", root, "fixture"], { env: { ...process.env, COPYFILE_DISABLE: "1" } });
+		pack();
+		assert.ok(compareArchiveToStage(stage, archive, "fixture").differences.length > 0);
+		assert.deepEqual(compareArchiveToStage(stage, archive, "fixture", true).differences, []);
+		await writeFile(path.join(stage, "runtime.js"), "modified\n");
+		assert.ok(compareArchiveToStage(stage, archive, "fixture", true).differences.some(d => d.includes("file bytes differ")));
+		await writeFile(path.join(fixture, "empty/required.js"), "required\n");
+		pack();
+		assert.ok(compareArchiveToStage(stage, archive, "fixture", true).differences.some(d => d.includes("empty/required.js: extra in archive")));
+	} finally { await rm(root, { recursive: true, force: true }); }
 });
 
 test("runtime smoke rejects HTTP200 with not_ready, accepts ready plus all dashboard routes", async () => {
