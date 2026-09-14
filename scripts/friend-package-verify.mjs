@@ -26,6 +26,19 @@ import {
 import { syncPlatformValidationHandoff } from "./friend-package-validation-handoff.mjs";
 import { scanTextForSecrets } from "./zaraa-secret-scan.mjs";
 
+/** A mirror may differ in Git HEAD only; dirty inputs and missing identity still fail. */
+export function matchesMirrorIdentity({ issues, marker, stagedRevision, currentRevision, latest, manifestSha256 }) {
+	return issues.length > 0
+		&& issues.every(issue => /^source HEAD [a-f0-9]{40} differs from (?:staged|current) manifest revision [a-f0-9]{40}$/.test(issue))
+		&& /^[a-f0-9]{40}$/.test(stagedRevision ?? "")
+		&& marker?.canonicalRevision === stagedRevision
+		&& latest?.source?.revision === stagedRevision && latest.source.clean === true
+		&& (!currentRevision || currentRevision === stagedRevision)
+		&& marker?.packageGeneratedAt === latest?.generatedAt
+		&& /^[a-f0-9]{64}$/.test(manifestSha256 ?? "")
+		&& marker?.manifestSha256 === manifestSha256;
+}
+
 /** Text surfaces scanned for secret-shaped content inside the staged friend kit. */
 const STAGED_SECRET_SCAN_EXTENSIONS = new Set([
 	".md",
@@ -540,15 +553,24 @@ function archiveInventory(archivePath, packageDirectory) {
 	throw new Error(`unsupported archive format: ${archivePath}`);
 }
 
-function compareArchiveToStage(stageDir, archivePath, packageDirectory) {
+export function compareArchiveToStage(stageDir, archivePath, packageDirectory, gitMirror = false) {
 	const stage = stageInventory(stageDir);
 	const archived = archiveInventory(archivePath, packageDirectory);
+	const nonempty = new Set();
+	for (const [name, entry] of archived) {
+		if (entry.type === "directory") continue;
+		const parts = name.split("/");
+		for (let i = 1; i < parts.length; i++) nonempty.add(parts.slice(0, i).join("/"));
+	}
 	const paths = [...new Set([...stage.keys(), ...archived.keys()])].sort();
 	const differences = [];
 	for (const path of paths) {
 		const expected = stage.get(path);
 		const actual = archived.get(path);
 		if (!expected) {
+			// Git cannot store empty directories. Only a pinned mirror gets this exception;
+			// missing files, symlinks and directories with content still fail.
+			if (gitMirror && actual.type === "directory" && !nonempty.has(path)) continue;
 			differences.push(`${path}: extra in archive`);
 			continue;
 		}
@@ -560,7 +582,9 @@ function compareArchiveToStage(stageDir, archivePath, packageDirectory) {
 			differences.push(`${path}: type ${actual.type}, expected ${expected.type}`);
 			continue;
 		}
-		if (actual.mode !== null && expected.mode !== null && expected.mode !== actual.mode) {
+		// Git preserves executable bits, not owner/group read/write permissions.
+		const modeMask = gitMirror ? 0o111 : 0o777;
+		if (actual.mode !== null && expected.mode !== null && (expected.mode & modeMask) !== (actual.mode & modeMask)) {
 			differences.push(
 				`${path}: mode ${actual.mode.toString(8)}, expected ${expected.mode.toString(8)}`,
 			);
@@ -1289,9 +1313,19 @@ export function verifyFriendPackage(options = {}) {
 	} catch (error) {
 		sourceIdentityIssues.push(error instanceof Error ? error.message : String(error));
 	}
+	const mirrorPath = join(root, ".mirror-provenance.json");
+	const mirrorIdentity = matchesMirrorIdentity({
+		issues: sourceIdentityIssues,
+		marker: existsSync(mirrorPath) ? readJson(mirrorPath) : null,
+		stagedRevision, currentRevision, latest,
+		manifestSha256: stagedManifestPath && existsSync(stagedManifestPath)
+			? createHash("sha256").update(readFileSync(stagedManifestPath)).digest("hex") : null,
+	});
 	checks.push(
 		sourceIdentityIssues.length > 0
-			? makeCheck("FAIL", "Release source identity", sourceIdentityIssues.join("; "))
+			? mirrorIdentity
+				? makeCheck("WARN", "Release source identity", `Pinned mirror of ${stagedRevision}; package date and staged manifest SHA256 match. This validates the recorded artifact, not current canonical source.`)
+				: makeCheck("FAIL", "Release source identity", sourceIdentityIssues.join("; "))
 			: makeCheck(
 					"PASS",
 					"Release source identity",
@@ -1466,7 +1500,7 @@ export function verifyFriendPackage(options = {}) {
 			continue;
 		}
 		try {
-			const comparison = compareArchiveToStage(stageDir, archivePath, packageDirectory);
+			const comparison = compareArchiveToStage(stageDir, archivePath, packageDirectory, mirrorIdentity);
 			checks.push(
 				comparison.differences.length === 0
 					? makeCheck(
@@ -1509,7 +1543,7 @@ export function verifyFriendPackage(options = {}) {
 
 	const platforms = platformMatrix({
 		root,
-		packageRoot,
+		packageRoot: options.evidenceRoot ?? packageRoot,
 		version: latest.version,
 		packageGeneratedAt: latest.generatedAt,
 	});
@@ -1629,9 +1663,16 @@ function printResult(result) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-	const result = verifyFriendPackage();
+	const mirror = existsSync(join(process.cwd(), ".mirror-provenance.json"));
+	const evidenceRoot = join(process.cwd(), ".validation");
+	const result = verifyFriendPackage(mirror ? { evidenceRoot, writeReport: false, syncPublic: false } : {});
+	if (mirror) {
+		mkdirSync(evidenceRoot, { recursive: true });
+		result.reportPath = join(evidenceRoot, "validation-report.json");
+		writeFileSync(result.reportPath, `${JSON.stringify(result.report, null, 2)}\n`);
+	}
 	printResult(result);
-	if (result.checks.some((check) => check.status === "FAIL")) {
+	if (!result.safeToShare) {
 		process.exitCode = 1;
 	}
 }

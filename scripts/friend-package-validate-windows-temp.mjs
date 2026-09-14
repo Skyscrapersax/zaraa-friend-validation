@@ -65,8 +65,7 @@ export function planWindowsTempValidation({ root = process.cwd(), version, tempB
 		installer,
 		reportPath: path.join(
 			root,
-			"dist",
-			"friend-package",
+			".validation",
 			`windows-clean-install-validation-${version}.json`,
 		),
 		logPath: path.join(tempBase, "install-output.log"),
@@ -173,6 +172,7 @@ async function writeEvidence(
 		},
 	};
 
+	await mkdir(path.dirname(plan.reportPath), { recursive: true });
 	await writeFile(plan.reportPath, `${JSON.stringify(evidence, null, 2)}\n`);
 	return evidence;
 }
@@ -185,9 +185,10 @@ async function main() {
 	const args = parseArgs(process.argv.slice(2));
 	const root = process.cwd();
 	const latest = await readJson(path.join(root, "dist", "friend-package", "latest.json"));
-	assertPackageStructureValid(verifyFriendPackage({ root, writeReport: false, syncPublic: false }));
-	const tempBase =
-		args.tempBase || (await mkdtemp(path.join(tmpdir(), "zaraa-windows-clean-install.")));
+	const verifyOptions = { root, evidenceRoot: path.join(root, ".validation"), writeReport: false, syncPublic: false };
+	assertPackageStructureValid(verifyFriendPackage(verifyOptions));
+	// --temp-base is a parent, never a directory we may erase wholesale.
+	const tempBase = await mkdtemp(path.join(path.resolve(args.tempBase || tmpdir()), "zaraa-windows-clean-install."));
 	const plan = planWindowsTempValidation({ root, version: latest.version, tempBase });
 
 	if (!existsSync(plan.installer)) {
@@ -210,13 +211,14 @@ async function main() {
 			plan.env.ZARAA_DIR,
 		],
 		{
-			cwd: plan.root,
+			// Windows tools can create relative profile/cache files. Own those too.
+			cwd: plan.tempBase,
 			env: validationEnv,
 			logPath: plan.logPath,
 		},
 	);
 	const provenance = await collectValidationProvenance({
-		cwd: plan.root,
+		cwd: plan.tempBase,
 		env: validationEnv,
 		logPath: plan.provenanceLogPath,
 	});
@@ -242,7 +244,8 @@ async function main() {
 		latest.generatedAt,
 		realZaraaConfigTouched,
 	);
-	const verification = verifyFriendPackage({ root, writeReport: true, syncPublic: true });
+	const verification = verifyFriendPackage(verifyOptions);
+	await writeFile(path.join(root, ".validation", "verification-Windows.json"), `${JSON.stringify(verification.report, null, 2)}\n`);
 
 	if (args.cleanup) {
 		await rm(plan.tempBase, { recursive: true, force: true });

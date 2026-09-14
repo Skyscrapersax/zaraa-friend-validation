@@ -239,8 +239,15 @@ function readJson(path) {
 }
 
 function isInside(parent, child) {
-	const rel = relative(parent, child);
-	return rel === "" || (!rel.startsWith("..") && !rel.startsWith("/"));
+	const rel = relative(resolve(parent), resolve(child));
+	// win32 path.relative() returns an absolute path across drives
+	// ("C:\\Temp\\...") — that is not containment. Rejecting only a
+	// POSIX "/" prefix made official Windows CI refuse D:\\kit →
+	// C:\\Users\\...\\Temp\\install\\zaraa ("target cannot live inside
+	// the source kit").
+	if (rel === "") return true;
+	if (isAbsolute(rel) || rel.startsWith("..")) return false;
+	return true;
 }
 
 function shouldSkipSource(name, sourcePath) {
